@@ -111,7 +111,7 @@ apiRouter.put("/gifted/:playerId/:id", async (req, resp) => {
 
 function delay(timeMs) {
     return new Promise((resolve) => {
-        setTimeout(resolve, timeMs);
+        setTimeout(resolve, timeMs).unref();
     })
 }
 
@@ -140,11 +140,22 @@ const server = app.listen(5000, () => {
     console.log("Listening on port 5000");
 });
 
-process.on("SIGINT", () => {
-    console.log("Interrupted, shutting down");
-    server.close();
-})
-process.on("SIGTERM", () => {
-    console.log("Terminated, shutting down");
-    server.close();
-})
+let shuttingDown = false;
+
+function shutdown() {
+    if(shuttingDown) {
+        console.log("Interrupted twice, forcibly dying");
+        process.exit(1);
+    } else {
+        console.log("Interrupted, shutting down");
+        shuttingDown = true;
+        server.close();
+        setTimeout(() => {
+            console.log("Did not automatically shut down, forcing the issue");
+            process.exit(1);
+        }, 5_000);
+    }
+}
+
+process.on("SIGINT", shutdown)
+process.on("SIGTERM", shutdown)

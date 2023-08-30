@@ -38,10 +38,6 @@ function nextWeeklyRolloverDate() {
     return getNow().plus({ weeks: 1 }).startOf("week");
 }
 
-function handleExpiry() {
-    setInterval(checkCacheExpiries, 60_000);
-}
-
 function getToday() {
     return getNow().startOf("day").toISODate();
 }
@@ -241,4 +237,10 @@ export function addListener(player, cb) {
     };
 }
 
+function handleExpiry() {
+    setInterval(checkCacheExpiries, 60_000).unref();
+    
+}
+
 handleExpiry();
+
