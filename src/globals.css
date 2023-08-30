@@ -1,0 +1,28 @@
+body {
+  background-color: rgb(228, 216, 180);
+  color: black;
+  margin: 15px;
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+h1 {
+  font-size: 24px;
+}
+
+@media (max-width: 730px) {
+  body {
+    margin: 1px;
+  }
+
+  h1 {
+    padding: 5px;
+  }
+}
+
+a {
+  color: #66f;
+}
+
+a:visited {
+  color: rgb(121, 4, 156);
+}

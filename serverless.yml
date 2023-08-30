@@ -1,0 +1,23 @@
+service: palia-app
+
+provider:
+  name: aws
+  stage: ${opt:stage, "dev"}
+  runtime: nodejs18.x
+
+resources:
+  Resources:
+    PaliaTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: palia-app-${self:provider.stage}
+        KeySchema:
+          - AttributeName: id
+            KeyType: HASH
+        AttributeDefinitions:
+          - AttributeName: id
+            AttributeType: S
+        BillingMode: PAY_PER_REQUEST
+        TimeToLiveSpecification:
+          AttributeName: expiry
+          Enabled: true
