@@ -1,8 +1,8 @@
 import Villager from "./components/Villager.js"
 import villagers from "./villagers.js";
 import React, { useEffect, useState } from "react";
-import { LikesContext, PlayerContext } from "./context.js";
-import { setLike as storeLike, setComplete as storeComplete, getLikes, getCompleted } from "./dataStore.js";
+import { LikesContext, CompletedContext, GiftedContext } from "./context.js";
+import { setLike as storeLike, setComplete as storeComplete, getLikes, getCompleted, getGifted, setGifted as storeGifted } from "./dataStore.js";
 import { v4 as uuid } from "uuid";
 
 import styles from "./page.module.css";
@@ -12,6 +12,7 @@ export default function Home() {
   const [playerId, setPlayerId] = useState(null);
   const [likesState, setLikesState] = useState({});
   const [completeState, setCompleteState] = useState({});
+  const [giftedState, setGiftedState] = useState({});
 
   async function refresh(full) {
     console.log("current player id", playerId);
@@ -21,6 +22,8 @@ export default function Home() {
     if(full) {
       const newCompleted = await getCompleted(playerId);
       setCompleteState(newCompleted);
+      const newGifted = await getGifted(playerId);
+      setGiftedState(newGifted);
     }
   }
 
@@ -47,6 +50,17 @@ export default function Home() {
       const data = JSON.parse(event.data);
       // console.log("New complete state:", data);
       setCompleteState(data);
+    })
+    evtSource.addEventListener("gifted", (event) => {
+      const data = JSON.parse(event.data);
+      // console.log("New complete state:", data);
+      setGiftedState(data);
+    })
+    evtSource.addEventListener("weekly_reset", (event) => {
+      refresh(true);
+    })
+    evtSource.addEventListener("daily_reset", (event) => {
+      refresh(true);
     })
 
     return () => {
@@ -77,6 +91,16 @@ export default function Home() {
     setCompleteState(newState);
   }
 
+  function setGifted(id, value) {
+    storeGifted(playerId, id, value);
+    const newState = {
+      ...giftedState,
+      [id]: value,
+    };
+    console.log("Setting gifted state to", newState);
+    setGiftedState(newState);
+  }
+
   // console.log("State is", completeState);
   if(!playerId) {
     return (
@@ -88,9 +112,11 @@ export default function Home() {
     <main>
       <h1>Palia Villager Tracker</h1>
       <LikesContext.Provider value={likesState}>
-        <PlayerContext.Provider value={completeState}>
-          {villagers.map(villager => (<Villager key={villager} name={villager} setLike={setLike} setComplete={setComplete} />))}
-        </PlayerContext.Provider>
+        <CompletedContext.Provider value={completeState}>
+          <GiftedContext.Provider value={giftedState}>
+            {villagers.map(villager => (<Villager key={villager} name={villager} setLike={setLike} setComplete={setComplete} setGifted={setGifted} />))}
+          </GiftedContext.Provider>
+        </CompletedContext.Provider>
       </LikesContext.Provider>
     </main>
     <footer>

@@ -1,5 +1,5 @@
 import express, {Router} from "express";
-import {getLikes, getCompleted, setLike, setComplete, addListener} from "./dataStore.js";
+import {getLikes, getCompleted, setLike, setComplete, addListener, getGifted, setGifted} from "./dataStore.js";
 
 const static_root = process.env.STATIC_ROOT ?? "../dist";
 
@@ -29,7 +29,7 @@ apiRouter.put("/like/:id", async (req, resp) => {
     const value = req.body;
     try {
         await setLike(req.params.id, value);
-        resp.status(201);
+        resp.status(204);
     } catch(e) {
         console.error(e);
         resp.status(500);
@@ -73,6 +73,41 @@ apiRouter.put("/complete/:playerId/:id", async (req, resp) => {
     }
     resp.end();
 })
+
+apiRouter.get("/gifted/:playerId", async (req, resp) => {
+    try {
+        const gifted = await getGifted(req.params.playerId);
+        resp.status(200);
+        resp.json(gifted);
+    } catch(e) {
+        console.error(e);
+        resp.status(500);
+        resp.json({
+            error: e.message,
+        });
+    }
+    resp.end();
+})
+
+apiRouter.put("/gifted/:playerId/:id", async (req, resp) => {
+    const value = (req.body === "true" ? true : (req.body === "false" ? false : null));
+
+    try {
+        if(value === null) {
+            throw new Error("Invalid values");
+        }
+        await setGifted(req.params.playerId, req.params.id, value);
+        resp.status(204);
+    } catch(e) {
+        console.error(e);
+        resp.status(500);
+        resp.json({
+            error: e.message,
+        });
+    }
+    resp.end();
+})
+
 
 function delay(timeMs) {
     return new Promise((resolve) => {

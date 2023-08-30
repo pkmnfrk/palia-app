@@ -1,0 +1,13 @@
+service: palia-app-infra
+
+provider:
+  name: aws
+  stage: ${opt:stage, "dev"}
+  runtime: nodejs18.x
+
+resources:
+  Resources:
+    Repository:
+      Type: AWS::ECR::Repository
+      Properties:
+        RepositoryName: palia-app-repo

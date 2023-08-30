@@ -21,3 +21,14 @@ export async function setComplete(player, id, value) {
 export async function getCompleted(player) {
     return await (await fetch(`/api/completed/${player}`)).json();
 }
+
+export async function setGifted(player, id, value) {
+    await fetch(`/api/gifted/${player}/${id}`, {
+        method: "PUT",
+        body: value ? "true" : "false",
+    })
+}
+
+export async function getGifted(player) {
+    return await (await fetch(`/api/gifted/${player}`)).json();
+}

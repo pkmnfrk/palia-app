@@ -1,6 +1,15 @@
 
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import { DateTime } from "luxon";
+
+const fakeOffset = (() => {
+    return 0;
+    // const realNow = DateTime.now().setZone("America/New_York");
+    // const pretendTime = realNow.set({ hour: 23, minute: 59, second: 0, millisecond: 0});
+    // return pretendTime.diff(realNow);
+})();
+
 
 const stage = process.env.STAGE ?? "dev";
 
@@ -10,46 +19,66 @@ const dynamodb = DynamoDBDocument.from(new DynamoDBClient());
 const listeners = [];
 
 let likes_cache = null;
-let likes_cache_expiry = null;
-
 let complete_cache = {};
-let complete_cache_expiry = null;
+let likes_cache_expiry = nextWeeklyRolloverDate();
 
-function nextRolloverDate() {
-    const ret = new Date();
-    ret.setDate(ret.getDate() + 1);
-    ret.setUTCHours(4);
-    ret.setUTCMinutes(0, 0, 0);
-    return ret;
+
+let gifted_cache = {};
+let gifted_cache_expiry = nextDailyRolloverDate()
+
+function getNow() {
+    return DateTime.now().setZone("America/New_York").plus({milliseconds: fakeOffset});
 }
 
-function pad(x) {
-    x = `0${x}`;
+function nextDailyRolloverDate() {
+    return getNow().plus({ days: 1}).startOf("day");
+}
 
-    return x.substring(x.length - 2, x.length);
+function nextWeeklyRolloverDate() {
+    return getNow().plus({ weeks: 1 }).startOf("week");
+}
+
+function handleExpiry() {
+    setInterval(checkCacheExpiries, 60_000);
 }
 
 function getToday() {
-    const ret = new Date();
-    ret.setHours(0, 0, 0, 0);
-    ret.setUTCMinutes(-ret.getTimezoneOffset()); //adjust to eastern time
+    return getNow().startOf("day").toISODate();
+}
 
-    return `${ret.getUTCFullYear()}-${pad(ret.getUTCMonth() + 1)}-${pad(ret.getUTCDate())}`;
+function getWeek() {
+    return getNow().startOf("week").toISODate();
+}
+
+function checkCacheExpiries() {
+    const now = getNow();
+    if(likes_cache_expiry < now) {
+        likes_cache = null;
+        complete_cache = {};
+        likes_cache_expiry = nextWeeklyRolloverDate();
+
+        sendEvent(null, "weekly_reset", {});
+    }
+
+    if(gifted_cache_expiry < now) {
+        gifted_cache = {};
+        gifted_cache_expiry = nextDailyRolloverDate();
+
+        sendEvent(null, "daily_reset", {});
+    }
 }
 
 export async function setLike(id, value) {
     console.log("saving likes", id, value);
 
-    const nextExpiry = nextRolloverDate();
-
-    const key = `root-likes-${getToday()}`;
+    const key = `root-likes-${getWeek()}`;
     await dynamodb.update({
         Key: {id: key},
         TableName: table,
         UpdateExpression: "set #id = :value, expiry = :expiry",
         ExpressionAttributeValues: {
             ":value": value,
-            ":expiry": Math.floor(nextExpiry.getTime() / 1000)
+            ":expiry": likes_cache_expiry.toUnixInteger()
         },
         ExpressionAttributeNames: {
             "#id": id
@@ -66,34 +95,38 @@ export async function setLike(id, value) {
 }
 
 export async function getLikes() {
-    if(likes_cache && likes_cache_expiry && likes_cache_expiry > new Date()) {
-        return likes_cache;
-    }
+    checkCacheExpiries();
 
-    const key = `root-likes-${getToday()}`;
-    const item = await dynamodb.get({
-        TableName: table,
-        Key: {id: key},
-    });
+    if(!likes_cache) {
+        const key = `root-likes-${getWeek()}`;
+        const item = await dynamodb.get({
+            TableName: table,
+            Key: {id: key},
+        });
 
-    if(item.Item) {
-        const ret = item.Item;
+        let ret = item.Item;
+
+        if(ret && ret.expiry < getNow().toUnixInteger()) {
+            ret = null;
+        }
+
+        if(!ret) {
+            ret = {};
+        }
+
         delete ret.id;
         delete ret.expiry;
 
         likes_cache = ret;
-        likes_cache_expiry = nextRolloverDate();
-        // console.log("Fetched likes as", ret);
-        return ret;
     }
-    return {};
+
+    return likes_cache;
 }
 
 export async function setComplete(player, id, value) {
     // console.log("saving completed", player, id, value);
     
-    const nextExpiry = nextRolloverDate();
-    const key = `player-${player}-${getToday()}`;
+    const key = `completed-${player}-${getWeek()}`;
 
     await dynamodb.update({
         Key: {id: key},
@@ -101,7 +134,7 @@ export async function setComplete(player, id, value) {
         UpdateExpression: "set #id = :value, expiry = :expiry",
         ExpressionAttributeValues: {
             ":value": value,
-            ":expiry": Math.floor(nextExpiry.getTime() / 1000),
+            ":expiry": likes_cache_expiry.toUnixInteger(),
         },
         ExpressionAttributeNames: {
             "#id": id
@@ -113,37 +146,74 @@ export async function setComplete(player, id, value) {
     completed[id] = value;
 
     sendEvent(player, "complete", completed);
-
-    // console.log("Saved");
 }
 
-export async function getCompleted(player) {
-    const now = new Date();
-    if(!complete_cache || (complete_cache_expiry && complete_cache_expiry < now)) {
-        complete_cache = {};
-        complete_cache_expiry = nextRolloverDate();
-    }
 
-    if(!complete_cache[player]) {   
-        const key = `player-${player}-${getToday()}`;
+export async function setGifted(player, id, value) {
+    // console.log("saving completed", player, id, value);
+    
+    const key = `gifted-${player}-${getToday()}`;
+
+    await dynamodb.update({
+        Key: {id: key},
+        TableName: table,
+        UpdateExpression: "set #id = :value, expiry = :expiry",
+        ExpressionAttributeValues: {
+            ":value": value,
+            ":expiry": gifted_cache_expiry.toUnixInteger(),
+        },
+        ExpressionAttributeNames: {
+            "#id": id
+        },
+    })
+
+    const gifted = await getGifted(player);
+
+    gifted[id] = value;
+
+    sendEvent(player, "gifted", gifted);
+}
+
+async function getCachedItem(player, cache, key) {
+    if(!cache[player]) {   
         const item = await dynamodb.get({
             TableName: table,
             Key: {id: key},
         });
 
-        if(item.Item) {
-            const ret = item.Item;
-            delete ret.id;
-            delete ret.expiry;
-            // console.log("Completed for player", player, "is", ret);
+        let ret = item.Item;
 
-            complete_cache[player] = ret;
-        } else {
-            complete_cache[player] = {};
+        if(ret && ret.expiry < getNow().toUnixInteger()) {
+            ret = null;
         }
+
+        if(!ret) {
+            ret = {};
+        }
+
+        delete ret.id;
+        delete ret.expiry;
+        cache[player] = ret;
     }
-    return complete_cache[player];
+
+    return cache[player];
 }
+
+export async function getCompleted(player) {
+    checkCacheExpiries();
+    const key = `completed-${player}-${getWeek()}`;
+
+    return getCachedItem(player, complete_cache, key);
+}
+
+export function getGifted(player) {
+    checkCacheExpiries();
+
+    const key = `gifted-${player}-${getToday()}`;
+    return getCachedItem(player, gifted_cache, key);
+}
+
+
 
 function sendEvent(player, type, data) {
     const event = {
@@ -170,3 +240,5 @@ export function addListener(player, cb) {
         }
     };
 }
+
+handleExpiry();
