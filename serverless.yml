@@ -5,6 +5,10 @@ provider:
   stage: ${opt:stage, "dev"}
   runtime: nodejs18.x
 
+custom:
+  certificateArn: arn:aws:acm:us-east-1:285209584037:certificate/c20df290-1b6a-4cd3-a5bc-6a7c337f07b1
+  imageVersion: ${param:cdnv}
+
 resources:
   Resources:
     PaliaTable:
@@ -21,3 +25,198 @@ resources:
         TimeToLiveSpecification:
           AttributeName: expiry
           Enabled: true
+
+    ExecutionRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Description: Role for launching ECS tasks
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - ecs.amazonaws.com
+                  - ecs-tasks.amazonaws.com
+              Action:
+                - "sts:AssumeRole"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy
+        Policies:
+          - PolicyName: ecr
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - secretsmanager:GetSecretValue
+                    - ssm:GetParameters
+                    - kms:Decrypt
+                  Resource: "*"
+
+    InstanceRole:
+      Type: AWS::IAM::Role
+      Properties:
+        Description: Role for running ECS tasks
+        AssumeRolePolicyDocument:
+          Version: "2012-10-17"
+          Statement:
+            - Effect: Allow
+              Principal:
+                Service:
+                  - ecs.amazonaws.com
+                  - ecs-tasks.amazonaws.com
+              Action:
+                - "sts:AssumeRole"
+        ManagedPolicyArns:
+          - arn:aws:iam::aws:policy/service-role/AmazonEC2ContainerServiceforEC2Role
+        Policies:
+          - PolicyName: permissions
+            PolicyDocument:
+              Version: "2012-10-17"
+              Statement:
+                - Effect: Allow
+                  Action:
+                    - dynamodb:Get
+                    - dynamodb:Get*
+                    - dynamodb:Query
+                    - dynamodb:Update*
+                    - dynamodb:Delete*
+                    - dynamodb:PutItem
+                    - dynamodb:Scan
+                  Resource:
+                    - !GetAtt PaliaTable.Arn
+
+    WebSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        VpcId: !ImportValue BingoVPC
+        GroupName: palia-web-security-group
+        GroupDescription: Web security group
+    LoadBalancerSecurityGroup:
+      Type: AWS::EC2::SecurityGroup
+      Properties:
+        VpcId: !ImportValue BingoVPC
+        GroupName: palia-lb-security-group
+        GroupDescription: Load Balancer security group
+        SecurityGroupIngress:
+          CidrIp: "0.0.0.0/0"
+          IpProtocol: tcp
+          FromPort: 443
+          ToPort: 443
+        SecurityGroupEgress:
+          CidrIp: "0.0.0.0/0"
+          IpProtocol: -1
+    WebToInternetEgress:
+      Type: AWS::EC2::SecurityGroupEgress
+      Properties:
+        CidrIp: "0.0.0.0/0"
+        GroupId: !Ref WebSecurityGroup
+        IpProtocol: -1
+    LBToWebIngress:
+      Type: AWS::EC2::SecurityGroupIngress
+      Properties:
+        GroupId: !Ref WebSecurityGroup
+        SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
+        IpProtocol: tcp
+        FromPort: 3000
+        ToPort: 3000
+    WebTargetGroup:
+      Type: AWS::ElasticLoadBalancingV2::TargetGroup
+      Properties:
+        HealthCheckEnabled: true
+        HealthCheckProtocol: HTTP
+        Name: palia-web
+        Port: 5000
+        Protocol: HTTP
+        VpcId: !ImportValue BingoVPC
+        TargetType: ip
+        TargetGroupAttributes:
+          - Key: deregistration_delay.timeout_seconds
+            Value: "30"
+    WebLoadBalancer:
+      Type: AWS::ElasticLoadBalancingV2::LoadBalancer
+      Properties:
+        Name: palia
+        Scheme: internet-facing
+        Subnets:
+          - !ImportValue BingoPublicSubnet
+          - !ImportValue BingoPublicSubnet2
+        Type: application
+        SecurityGroups:
+          - !Ref LoadBalancerSecurityGroup
+    WebListener:
+      Type: AWS::ElasticLoadBalancingV2::Listener
+      Properties:
+        DefaultActions:
+          - Type: forward
+            TargetGroupArn: !Ref WebTargetGroup
+        LoadBalancerArn: !Ref WebLoadBalancer
+        Port: 443
+        Protocol: HTTPS
+        Certificates:
+          - CertificateArn: ${self:custom.certificateArn}
+    Cluster:
+      Type: AWS::ECS::Cluster
+      Properties:
+        ClusterName: palia
+        CapacityProviders:
+          - FARGATE
+    WebTask:
+      Type: AWS::ECS::TaskDefinition
+      Properties:
+        ContainerDefinitions:
+          - Essential: true
+            Image:
+              Fn::Join:
+                - ''
+                - - "285209584037.dkr.ecr.us-east-1.amazonaws.com/palia-app-repo:"
+                  - ${self:custom.imageVersion}
+            Name: web
+            PortMappings:
+              - ContainerPort: 5000
+            LogConfiguration:
+              LogDriver: awslogs
+              Options:
+                awslogs-group: !Ref LogGroup
+                awslogs-region: us-east-1
+                awslogs-stream-prefix: web
+        ExecutionRoleArn: !Ref ExecutionRole
+        Cpu: 256
+        Family: palia-app
+        Memory: 512
+        NetworkMode: awsvpc
+        RequiresCompatibilities:
+          - FARGATE
+        TaskRoleArn: !Ref InstanceRole
+
+    Web:
+      Type: AWS::ECS::Service
+      DependsOn: WebListener
+      Properties:
+        Cluster: !Ref Cluster
+        DeploymentConfiguration:
+          MaximumPercent: 200
+        DesiredCount: 1
+        # HealthCheckGracePeriodSeconds: 5
+        LaunchType: FARGATE
+        LoadBalancers:
+          - ContainerName: web
+            ContainerPort: 5000
+            TargetGroupArn: !Ref WebTargetGroup
+        NetworkConfiguration:
+          AwsvpcConfiguration:
+            SecurityGroups:
+              - !Ref WebSecurityGroup
+            Subnets:
+              - !ImportValue BingoPrivateSubnet
+        PropagateTags: SERVICE
+        SchedulingStrategy: REPLICA
+        ServiceName: web
+        TaskDefinition: !Ref WebTask
+
+    LogGroup:
+      Type: AWS::Logs::LogGroup
+      Properties:
+        LogGroupName: /ecs/palia
+        RetentionInDays: 30

@@ -1,10 +1,11 @@
 import express, {Router} from "express";
+import morgan from "morgan";
 import {getLikes, getCompleted, setLike, setComplete, addListener, getGifted, setGifted} from "./dataStore.js";
 
-const static_root = process.env.STATIC_ROOT ?? "../dist";
+const static_root = process.env.STATIC_ROOT ?? "../web/dist";
 
 const app = express();
-
+app.use(morgan("combined"))
 app.use(express.static(static_root));
 app.use(express.text({limit: 256}));
 
