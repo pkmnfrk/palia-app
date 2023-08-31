@@ -7,7 +7,7 @@ WORKDIR /var/app
 COPY web /var/app
 
 RUN npm i
-RUN npm run build
+RUN npm run build && cp public/favicon.png dist/
 
 FROM node:20-alpine
 ARG cdnv
