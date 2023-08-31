@@ -15,7 +15,7 @@ export default function VillagerLike({id, setLike, setComplete}) {
 
     return (
         <span className={styles.like}>
-            <input id={id} type="text" defaultValue={like} onChange={(v) => {
+            <input id={id} className={complete ? styles.completed : ""} type="text" defaultValue={like} onChange={(v) => {
                 if(state) {
                     clearTimeout(state);
                 }
