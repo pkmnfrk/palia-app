@@ -131,9 +131,11 @@ apiRouter.get("/listen/:playerId", async (req, resp) => {
         resp.write(`event: ${event.type}\ndata: ${JSON.stringify(event.data)}\n\n`);
     });
     try {
+        const version = process.env.CDNV ?? "test";
+        resp.write(`event: version\ndata: ${version}\n\n`);
         while(!req.socket.closed) {
-            resp.write(":ping\n\n");
             await delay(180_000);
+            resp.write(":ping\n\n");
         }
     } finally {
         undo();

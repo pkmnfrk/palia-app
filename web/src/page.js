@@ -62,6 +62,13 @@ export default function Home() {
     evtSource.addEventListener("daily_reset", (event) => {
       refresh(true);
     })
+    evtSource.addEventListener("version", (event) => {
+      const expected_version = event.data;
+      const actual_version = process.env.CDNV;
+      if(actual_version !== expected_version) {
+        window.location = window.location; //refresh
+      }
+    });
 
     return () => {
       console.log("Closing event source");
