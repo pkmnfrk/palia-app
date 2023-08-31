@@ -114,7 +114,9 @@ export default function Home() {
       <LikesContext.Provider value={likesState}>
         <CompletedContext.Provider value={completeState}>
           <GiftedContext.Provider value={giftedState}>
-            {villagers.map(villager => (<Villager key={villager} name={villager} setLike={setLike} setComplete={setComplete} setGifted={setGifted} />))}
+            <div className={styles.villagers}>
+              {villagers.map(villager => (<Villager key={villager} name={villager} setLike={setLike} setComplete={setComplete} setGifted={setGifted} />))}
+            </div>
           </GiftedContext.Provider>
         </CompletedContext.Provider>
       </LikesContext.Provider>

@@ -1,6 +1,6 @@
 .villagerWrapper {
     display: inline-block;
-    width: 98%;
+    width: 100%;
     margin: 5px;
 }
 
@@ -109,10 +109,9 @@
         width: 50px;
         margin-right: 3px;
     }
-}
 
-@media (min-width: 1130px) {
-    .villagerWrapper {
-        width: 49%;
+    .portraitWrapper {
+        width: 54px;
+        height: 54px;
     }
 }
