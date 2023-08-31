@@ -1,14 +1,21 @@
 import express, {Router} from "express";
 import morgan from "morgan";
 import {getLikes, getCompleted, setLike, setComplete, addListener, getGifted, setGifted} from "./dataStore.js";
+import cors from "cors";
 
 const static_root = process.env.STATIC_ROOT ?? "../web/dist";
 
 const app = express();
-app.use(morgan("combined"))
+// app.use(morgan("combined"))
 app.use(express.static(static_root));
 app.use(express.text({limit: 256}));
-
+if(process.env.stage !== "prd") {
+    app.use(cors({
+        origin: "http://localhost:8081",
+        credentials: false,
+        maxAge: 3600,
+    }))
+}
 const apiRouter = Router();
 
 apiRouter.get("/likes", async (req, resp) => {

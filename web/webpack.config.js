@@ -2,6 +2,7 @@ import path from "path";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import TerserWebpackPlugin from "terser-webpack-plugin";
+import DotenvWebpackPlugin from "dotenv-webpack";
 
 export default function(_env, argv) {
   const isProduction = argv.mode === "production";
@@ -38,18 +39,6 @@ export default function(_env, argv) {
                     "css-loader",
                 ]
             },
-            // {
-            //     test: /\.module\.css$/,
-            //     use: [
-            //         isProduction ? MiniCssExtractPlugin.loader : "style-loader",
-            //         {
-            //             loader: "css-loader",
-            //             options: {
-            //                 modules: true,
-            //             },
-            //         },
-            //     ]
-            // },
             {
                 test: /\.(png|jpg|gif)$/i,
                 use: {
@@ -73,6 +62,9 @@ export default function(_env, argv) {
         new HtmlWebpackPlugin({
             template: path.resolve("./public/index.html"),
             inject: true,
+        }),
+        new DotenvWebpackPlugin({
+            systemvars: true,
         }),
     ].filter(Boolean),
     optimization: {

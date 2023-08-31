@@ -40,7 +40,7 @@ export default function Home() {
     if(!playerId) return;
 
     console.log("Opening event source");
-    const evtSource = new EventSource("/api/listen/" + playerId);
+    const evtSource = new EventSource(`${process.env.API_ROOT}/listen/${playerId}`);
     evtSource.addEventListener("likes", (event) => {
       const data = JSON.parse(event.data);
       // console.log("New likes state:", data);
