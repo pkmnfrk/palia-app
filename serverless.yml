@@ -119,8 +119,8 @@ resources:
         GroupId: !Ref WebSecurityGroup
         SourceSecurityGroupId: !Ref LoadBalancerSecurityGroup
         IpProtocol: tcp
-        FromPort: 3000
-        ToPort: 3000
+        FromPort: 5000
+        ToPort: 5000
     WebTargetGroup:
       Type: AWS::ElasticLoadBalancingV2::TargetGroup
       Properties:
@@ -175,6 +175,9 @@ resources:
             Name: web
             PortMappings:
               - ContainerPort: 5000
+            Environment:
+              - Name: STAGE
+                Value: ${self:provider.stage}
             LogConfiguration:
               LogDriver: awslogs
               Options:
