@@ -8,7 +8,11 @@ const app = express();
 if(config.get("request_logging")) {
     app.use(morgan("combined"))
 }
-app.use(express.static(config.get("static_root")));
+app.use(express.static(config.get("static_root"), {
+    maxAge: "1d",
+    immutable: true,
+    setHeaders: setCustomCacheControl
+}));
 app.use(express.text({limit: 256}));
 
 app.use(cors({
@@ -16,6 +20,8 @@ app.use(cors({
     credentials: false,
     maxAge: 3600,
 }))
+
+app.set("etag", false);
 
 const apiRouter = Router();
 
@@ -150,6 +156,13 @@ app.use("/api", apiRouter);
 const server = app.listen(5000, () => {
     console.log("Listening on port 5000");
 });
+
+function setCustomCacheControl (res, path) {
+    if (express.static.mime.lookup(path) === 'text/html') {
+      // Custom Cache-Control for HTML files
+      res.setHeader('Cache-Control', 'public, max-age=0')
+    }
+  }
 
 let shuttingDown = false;
 

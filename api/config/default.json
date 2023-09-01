@@ -6,6 +6,6 @@
         "http://localhost:8085"
     ],
     "static_root": "../web/dist",
-    "request_logging": true,
+    "request_logging": false,
     "cdnv": "test"
 }
