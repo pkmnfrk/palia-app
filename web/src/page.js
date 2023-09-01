@@ -68,7 +68,7 @@ export default function Home() {
       if(actual_version !== expected_version) {
         setTimeout(() => {
           window.location = window.location; //refresh
-        }, 15000); // wait 15 sec for the server to stabilize
+        }, 120_000); // wait a while for the server to stabilize
       }
     });
 
