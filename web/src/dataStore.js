@@ -24,7 +24,7 @@ export async function getCompleted(player) {
 }
 
 export async function setGifted(player, id, value) {
-    await fetch(`${process.env.API_ROOT}/api/gifted/${player}/${id}`, {
+    await fetch(`${process.env.API_ROOT}/gifted/${player}/${id}`, {
         method: "PUT",
         body: value ? "true" : "false",
     })
