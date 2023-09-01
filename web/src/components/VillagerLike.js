@@ -1,17 +1,17 @@
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+
+import { setCompleted } from "../features/completedSlice.js";
+import { setLike } from "../features/likesSlice.js";
+
 import styles from "./Villager.module.css";
-import { LikesContext, CompletedContext } from "../context.js";
-import React, { useContext, useState } from "react";
 
-export default function VillagerLike({id, setLike, setComplete}) {
-    const likes = useContext(LikesContext);
-    const like = likes && likes[id] ? likes[id] : "";
-
-    const completes = useContext(CompletedContext);
-    const complete = completes && completes[id] ? completes[id] : false;
+export default function VillagerLike({id}) {
+    const like = useSelector(state => state.likes[id] ?? "");
+    const complete = useSelector(state => !!state.completed[id]);
+    const dispatch = useDispatch();
 
     const [state, setState] = useState(() => null);
-
-    // console.log("Complete is", completes, complete);
 
     return (
         <span className={styles.like}>
@@ -21,12 +21,12 @@ export default function VillagerLike({id, setLike, setComplete}) {
                 }
                 const timer = setTimeout(() => {
                     setState(null);
-                    setLike(id, v.target.value);
+                    dispatch(setLike(id, v.target.value));
                 }, 500)
                 setState(timer);
             }} />
             <input type="checkbox" checked={complete} onChange={(e) => {
-                setComplete(id, e.target.checked);
+                dispatch(setCompleted(id, e.target.checked));
             }}/>
         </span>
     )

@@ -4,31 +4,36 @@ import React, { useEffect, useState } from "react";
 import { LikesContext, CompletedContext, GiftedContext } from "./context.js";
 import { setLike as storeLike, setComplete as storeComplete, getLikes, getCompleted, getGifted, setGifted as storeGifted } from "./dataStore.js";
 import { v4 as uuid } from "uuid";
+import { setAll as setLiked } from "./features/likesSlice.js";
+import { setAll as setCompleted } from "./features/completedSlice.js";
+import { setAll as setGifted } from "./features/giftedSlice.js";
+import { setPlayerId } from "./features/playerSlice.js";
+import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./page.module.css";
 
 export default function Home() {
-  
-  const [playerId, setPlayerId] = useState(null);
-  const [likesState, setLikesState] = useState({});
-  const [completeState, setCompleteState] = useState({});
-  const [giftedState, setGiftedState] = useState({});
+  const dispatch = useDispatch();
+  const playerId = useSelector(state => state.player.id);
 
   async function refresh(full) {
     console.log("current player id", playerId);
     const newLikes = await getLikes()
-    setLikesState(newLikes);
+    // setLikesState(newLikes);
+    dispatch(setLiked(newLikes));
 
     if(full) {
       const newCompleted = await getCompleted(playerId);
-      setCompleteState(newCompleted);
+      // setCompleteState(newCompleted);
+      dispatch(setCompleted(newCompleted));
       const newGifted = await getGifted(playerId);
-      setGiftedState(newGifted);
+      // setGiftedState(newGifted);
+      dispatch(setGifted(newGifted));
     }
   }
 
   useEffect(() => {
-    setPlayerId(getPlayerId())
+    dispatch(setPlayerId(getPlayerId()));
   }, []);
 
   useEffect(() => {
@@ -44,17 +49,18 @@ export default function Home() {
     evtSource.addEventListener("likes", (event) => {
       const data = JSON.parse(event.data);
       // console.log("New likes state:", data);
-      setLikesState(data);
+      // setLikesState(data);
+      setLiked(data);
     });
     evtSource.addEventListener("complete", (event) => {
       const data = JSON.parse(event.data);
       // console.log("New complete state:", data);
-      setCompleteState(data);
+      dispatch(setCompleted(data));
     })
     evtSource.addEventListener("gifted", (event) => {
       const data = JSON.parse(event.data);
-      // console.log("New complete state:", data);
-      setGiftedState(data);
+      // console.log("New gifted state:", data);
+      dispatch(setGifted(data));
     })
     evtSource.addEventListener("weekly_reset", (event) => {
       refresh(true);
@@ -78,39 +84,6 @@ export default function Home() {
     }
   }, [playerId])
 
-  function setLike(id, value) {
-    console.log("setting", id, "to", value)
-    storeLike(id, value);
-
-    const newState = {
-      ...likesState,
-      [id]: value,
-    }
-    setLikesState(newState);
-  }
-
-  function setComplete(id, value) {
-    storeComplete(playerId, id, value);
-
-    const newState = {
-      ...completeState,
-      [id]: value,
-    };
-    console.log("Setting complete state to", newState);
-    setCompleteState(newState);
-  }
-
-  function setGifted(id, value) {
-    storeGifted(playerId, id, value);
-    const newState = {
-      ...giftedState,
-      [id]: value,
-    };
-    console.log("Setting gifted state to", newState);
-    setGiftedState(newState);
-  }
-
-  // console.log("State is", completeState);
   if(!playerId) {
     return (
       <div>Loading...</div>
@@ -120,15 +93,9 @@ export default function Home() {
     <>
     <main>
       <h1>Palia Villager Tracker</h1>
-      <LikesContext.Provider value={likesState}>
-        <CompletedContext.Provider value={completeState}>
-          <GiftedContext.Provider value={giftedState}>
-            <div className={styles.villagers}>
-              {villagers.map(villager => (<Villager key={villager} name={villager} setLike={setLike} setComplete={setComplete} setGifted={setGifted} />))}
-            </div>
-          </GiftedContext.Provider>
-        </CompletedContext.Provider>
-      </LikesContext.Provider>
+      <div className={styles.villagers}>
+        {villagers.map(villager => (<Villager key={villager} name={villager} />))}
+      </div>
     </main>
     <footer>
       <a href={`/?playerId=${playerId}`}>Link to your personalized page</a> - This is unique to you!<br />
