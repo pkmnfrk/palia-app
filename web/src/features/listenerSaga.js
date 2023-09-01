@@ -7,7 +7,7 @@ import { setAll as setCompleted, refreshCompleted} from "./completedSlice.js";
 import { setAll as setGifted, refreshGifted} from "./giftedSlice.js";
 
 /** @type {import("redux-saga").EventChannel} */
-let listener = null; 
+let listener = null;
 
 function* createListener(playerId) {
     return eventChannel((emit) => {

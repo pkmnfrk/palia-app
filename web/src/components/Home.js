@@ -1,9 +1,8 @@
-import Villager from "./Villager.js"
-import villagers from "../villagers.js";
 import React, { useEffect } from "react";
 import { v4 as uuid } from "uuid";
 import { setPlayerId } from "../features/playerSlice.js";
 import { useSelector, useDispatch } from "react-redux";
+import VillagerPage from "./VillagerPage.js";
 
 import styles from "./Home.module.css";
 
@@ -24,9 +23,7 @@ export default function Home() {
     <>
     <main>
       <h1>Palia Villager Tracker</h1>
-      <div className={styles.villagers}>
-        {villagers.map(villager => (<Villager key={villager} name={villager} />))}
-      </div>
+      <VillagerPage />
     </main>
     <footer>
       <a href={`/?playerId=${playerId}`}>Link to your personalized page</a> - This is unique to you!<br />
