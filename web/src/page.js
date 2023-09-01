@@ -66,7 +66,9 @@ export default function Home() {
       const expected_version = event.data;
       const actual_version = process.env.CDNV;
       if(actual_version !== expected_version) {
-        window.location = window.location; //refresh
+        setTimeout(() => {
+          window.location = window.location; //refresh
+        }, 15000); // wait 15 sec for the server to stabilize
       }
     });
 
