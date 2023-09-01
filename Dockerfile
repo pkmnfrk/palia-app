@@ -10,9 +10,6 @@ RUN npm i
 RUN npm run build && cp public/favicon.png dist/
 
 FROM node:20-alpine
-ARG cdnv
-ENV CDNV=$cdnv
-ENV STATIC_ROOT=./dist
 
 WORKDIR /var/app
 ADD api/package.json /var/app/package.json

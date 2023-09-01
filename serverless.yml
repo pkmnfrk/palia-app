@@ -176,8 +176,10 @@ resources:
             PortMappings:
               - ContainerPort: 5000
             Environment:
-              - Name: STAGE
+              - Name: NODE_ENV
                 Value: ${self:provider.stage}
+              - Name: CDNV
+                Value: ${self:custom.imageVersion}
             LogConfiguration:
               LogDriver: awslogs
               Options:

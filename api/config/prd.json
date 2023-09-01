@@ -1,0 +1,8 @@
+{
+    "table": "palia-app-prd",
+    "allowed_origins": [
+        "https://palia.mike-caron.ca"
+    ],
+    "static_root": "./dist",
+    "request_logging": false
+}

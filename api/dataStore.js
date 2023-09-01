@@ -2,6 +2,7 @@
 import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
 import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
 import { DateTime } from "luxon";
+import config from "config";
 
 const fakeOffset = (() => {
     return 0;
@@ -10,10 +11,7 @@ const fakeOffset = (() => {
     // return pretendTime.diff(realNow);
 })();
 
-
-const stage = process.env.STAGE ?? "dev";
-
-const table = `palia-app-${stage}`;
+const table = config.get("table");
 const dynamodb = DynamoDBDocument.from(new DynamoDBClient());
 
 const listeners = [];
