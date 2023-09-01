@@ -60,6 +60,7 @@
     border-radius: 37.5px;
     width: 79px;
     height: 79px;
+    cursor: pointer;
 }
 
 .gifted .portraitWrapper {
