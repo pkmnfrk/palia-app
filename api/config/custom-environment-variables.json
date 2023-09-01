@@ -1,3 +1,4 @@
 {
-    "cdnv": "CDNV"
+    "cdnv": "CDNV",
+    "request_logging": "REQUEST_LOGGING"
 }

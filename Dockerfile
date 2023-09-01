@@ -1,5 +1,5 @@
 FROM node:20-alpine
-ARG cdnv
+ARG cdnv=test
 ENV CDNV=$cdnv
 ENV API_ROOT=/api
 
@@ -19,5 +19,6 @@ RUN npm i --omit=dev
 
 COPY api /var/app
 COPY --from=0 /var/app/dist /var/app/dist
+ENV NODE_ENV=docker
 
 CMD ["node", "index.js"]
