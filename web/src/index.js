@@ -1,6 +1,6 @@
 import React from "react";
 import {createRoot} from "react-dom/client";
-import Home from "./page.js";
+import Home from "./components/Home.js";
 import "./globals.css";
 import store from "./store.js";
 import {Provider} from "react-redux";

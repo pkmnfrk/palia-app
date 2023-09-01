@@ -20,6 +20,12 @@ export const setCompleted = (id, value) => async (dispatch, getState) => {
     await dataStore.setComplete(playerId, id, value);
 };
 
+export const refreshCompleted = () => async (dispatch, getState) => {
+    const playerId = getState().player.id;
+    const completed = await dataStore.getCompleted(playerId);
+    dispatch(setAll(completed));
+};
+
 export const { setAll, setOne } = completedSlice.actions;
 
 export default completedSlice.reducer;

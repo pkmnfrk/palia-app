@@ -19,6 +19,11 @@ export const setLike = (id, value) => async (dispatch) => {
     await dataStore.setLike(id, value);
 };
 
+export const refreshLikes = () => async (dispatch) => {
+    const likes = await dataStore.getLikes();
+    dispatch(setAll(likes));
+}
+
 export const { setAll, setOne } = likesSlice.actions;
 
 export default likesSlice.reducer;

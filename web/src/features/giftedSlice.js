@@ -20,6 +20,12 @@ export const setGifted = (id, value) => async (dispatch, getState) => {
     await dataStore.setGifted(playerId, id, value);
 };
 
+export const refreshGifted = () => async (dispatch, getState) => {
+    const playerId = getState().player.id;
+    const gifted = await dataStore.getGifted(playerId);
+    dispatch(setAll(gifted));
+};
+
 export const { setAll, setOne } = giftedSlice.actions;
 
 export default giftedSlice.reducer;
