@@ -130,7 +130,8 @@ export default function Home() {
     </main>
     <footer>
       <a href={`/?playerId=${playerId}`}>Link to your personalized page</a> - This is unique to you!<br />
-      This is a fan project, not associated with Singularity 6. All images &copy; Singularity 6. Website &copy; 2023 Mike Caron
+      This is a fan project, not associated with Singularity 6. All images &copy; Singularity 6. Website &copy; 2023 Mike Caron<br />
+      Version {process.env.CDNV}
     </footer>
     </>
   )
