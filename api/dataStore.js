@@ -28,7 +28,7 @@ let player_cache = {
         players: {},
         expiry: nextWeeklyRolloverDate(),
     },
-    bundles: {
+    bundle: {
         players: {},
     }
 };
@@ -84,7 +84,7 @@ function expiryFor(entity) {
         case "gifted":
             return nextDailyRolloverDate();
         case "bundle":
-            return getNow().plus({year: 1});
+            return getNow().plus({year: 5});
         default:
             throw new Error("Unknown entity type " + entity);
         

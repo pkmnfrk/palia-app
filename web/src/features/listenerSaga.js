@@ -5,6 +5,7 @@ import {setPlayerId} from "./playerSlice.js";
 import { setAll as setLiked, refreshLikes} from "./likesSlice.js";
 import { setAll as setCompleted, refreshCompleted} from "./completedSlice.js";
 import { setAll as setGifted, refreshGifted} from "./giftedSlice.js";
+import { setAll as setBundle, refreshBundle} from "./bundleSlice.js";
 
 /** @type {import("redux-saga").EventChannel} */
 let listener = null;
@@ -12,15 +13,6 @@ let listener = null;
 function* createListener(playerId) {
     return eventChannel((emit) => {
         const listener = new EventSource(`${process.env.API_ROOT}/listen/${playerId}`);
-
-        function refresh(full) {
-            console.log("current player id", playerId);
-            emit(refreshLikes());
-            if(full) {
-              emit(refreshCompleted());
-              emit(refreshGifted());
-            }
-          }
 
         listener.addEventListener("likes", (event) => {
             const data = JSON.parse(event.data);
@@ -34,6 +26,10 @@ function* createListener(playerId) {
             const data = JSON.parse(event.data);
             emit(setGifted(data));
         })
+        listener.addEventListener("bundle", (event) => {
+            const data = JSON.parse(event.data);
+            emit(setBundle(data));
+        })
         listener.addEventListener("reset", (event) => {
             const data = JSON.parse(event.data);
             switch(data.entity) {
@@ -43,6 +39,8 @@ function* createListener(playerId) {
                     emit(refreshCompleted()); break;
                 case "gifted":
                     emit(refreshGifted()); break;
+                case "bundle":
+                    emit(refreshBundle()); break;
             }
         })
         listener.addEventListener("version", (event) => {
@@ -70,6 +68,7 @@ function* setUpListener(action) {
     yield put(refreshLikes())
     yield put(refreshCompleted())
     yield put(refreshGifted());
+    yield put(refreshBundle());
 
     while(true) {
         const action = yield take(listener);

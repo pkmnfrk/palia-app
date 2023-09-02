@@ -1,5 +1,6 @@
 export const ENTITY_COMPLETED="completed";
 export const ENTITY_GIFTED="gifted";
+export const ENTITY_BUNDLE="bundle";
 
 export async function setLike(id, value) {
     await fetch(`${process.env.API_ROOT}/like/${id}`, {
