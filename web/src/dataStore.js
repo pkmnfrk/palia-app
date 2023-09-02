@@ -13,23 +13,23 @@ export async function getLikes() {
 }
 
 export async function setComplete(player, id, value) {
-    await fetch(`${process.env.API_ROOT}/complete/${player}/${id}`, {
+    await fetch(`${process.env.API_ROOT}/player/${player}/completed/${id}`, {
         method: "PUT",
         body: value ? "true" : "false",
     })
 }
 
 export async function getCompleted(player) {
-    return await (await fetch(`${process.env.API_ROOT}/completed/${player}`)).json();
+    return await (await fetch(`${process.env.API_ROOT}/player/${player}/completed`)).json();
 }
 
 export async function setGifted(player, id, value) {
-    await fetch(`${process.env.API_ROOT}/gifted/${player}/${id}`, {
+    await fetch(`${process.env.API_ROOT}/player/${player}/gifted/${id}`, {
         method: "PUT",
         body: value ? "true" : "false",
     })
 }
 
 export async function getGifted(player) {
-    return await (await fetch(`${process.env.API_ROOT}/gifted/${player}`)).json();
+    return await (await fetch(`${process.env.API_ROOT}/player/${player}/gifted`)).json();
 }

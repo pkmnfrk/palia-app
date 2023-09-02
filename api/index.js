@@ -1,6 +1,6 @@
 import express, {Router} from "express";
 import morgan from "morgan";
-import {getLikes, getCompleted, setLike, setComplete, addListener, getGifted, setGifted} from "./dataStore.js";
+import {getLikes, setLike, getEntity, setEntity, addListener} from "./dataStore.js";
 import cors from "cors";
 import config from "config";
 
@@ -55,9 +55,11 @@ apiRouter.put("/like/:id", async (req, resp) => {
     resp.end();
 })
 
-apiRouter.get("/completed/:playerId", async (req, resp) => {
+const entityType = ":entity(completed|gifted|bundle)";
+
+apiRouter.get(`/player/:playerId/${entityType}`, async (req, resp) => {
     try {
-        const completed = await getCompleted(req.params.playerId);
+        const completed = await getEntity(req.params.playerId, req.params.entity);
         resp.status(200);
         resp.json(completed);
     } catch(e) {
@@ -70,14 +72,14 @@ apiRouter.get("/completed/:playerId", async (req, resp) => {
     resp.end();
 })
 
-apiRouter.put("/complete/:playerId/:id", async (req, resp) => {
+apiRouter.put(`/player/:playerId/${entityType}/:id`, async (req, resp) => {
     const value = (req.body === "true" ? true : (req.body === "false" ? false : null));
 
     try {
         if(value === null) {
             throw new Error("Invalid values");
         }
-        await setComplete(req.params.playerId, req.params.id, value);
+        await setEntity(req.params.playerId, req.params.entity, req.params.id, value);
         resp.status(204);
     } catch(e) {
         console.error(e);
@@ -88,41 +90,6 @@ apiRouter.put("/complete/:playerId/:id", async (req, resp) => {
     }
     resp.end();
 })
-
-apiRouter.get("/gifted/:playerId", async (req, resp) => {
-    try {
-        const gifted = await getGifted(req.params.playerId);
-        resp.status(200);
-        resp.json(gifted);
-    } catch(e) {
-        console.error(e);
-        resp.status(500);
-        resp.json({
-            error: e.message,
-        });
-    }
-    resp.end();
-})
-
-apiRouter.put("/gifted/:playerId/:id", async (req, resp) => {
-    const value = (req.body === "true" ? true : (req.body === "false" ? false : null));
-
-    try {
-        if(value === null) {
-            throw new Error("Invalid values");
-        }
-        await setGifted(req.params.playerId, req.params.id, value);
-        resp.status(204);
-    } catch(e) {
-        console.error(e);
-        resp.status(500);
-        resp.json({
-            error: e.message,
-        });
-    }
-    resp.end();
-})
-
 
 function delay(timeMs) {
     return new Promise((resolve) => {

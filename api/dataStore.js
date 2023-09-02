@@ -17,12 +17,21 @@ const dynamodb = DynamoDBDocument.from(new DynamoDBClient());
 const listeners = [];
 
 let likes_cache = null;
-let complete_cache = {};
 let likes_cache_expiry = nextWeeklyRolloverDate();
 
-
-let gifted_cache = {};
-let gifted_cache_expiry = nextDailyRolloverDate()
+let player_cache = {
+    gifted: {
+        players: {},
+        expiry: nextDailyRolloverDate(),
+    },
+    completed: {
+        players: {},
+        expiry: nextWeeklyRolloverDate(),
+    },
+    bundles: {
+        players: {},
+    }
+};
 
 function getNow() {
     return DateTime.now().setZone("America/New_York").plus({milliseconds: fakeOffset});
@@ -48,17 +57,51 @@ function checkCacheExpiries() {
     const now = getNow();
     if(likes_cache_expiry < now) {
         likes_cache = null;
-        complete_cache = {};
         likes_cache_expiry = nextWeeklyRolloverDate();
 
-        sendEvent(null, "weekly_reset", {});
+        sendEvent(null, "reset", {
+            entity: "likes"
+        });
     }
 
-    if(gifted_cache_expiry < now) {
-        gifted_cache = {};
-        gifted_cache_expiry = nextDailyRolloverDate();
+    for(const [entity, cache] of Object.entries(player_cache)) {
+        if(cache.expiry && cache.expiry < now) {
+            cache.players = {};
+            cache.expiry = expiryFor(entity);
 
-        sendEvent(null, "daily_reset", {});
+            sendEvent(null, "reset", {
+                entity
+            });
+        }
+    }
+}
+
+function expiryFor(entity) {
+    switch(entity) {
+        case "likes":
+        case "completed":
+            return nextWeeklyRolloverDate();
+        case "gifted":
+            return nextDailyRolloverDate();
+        case "bundle":
+            return getNow().plus({year: 1});
+        default:
+            throw new Error("Unknown entity type " + entity);
+        
+    }
+}
+
+function keyFor(entity, player) {
+    switch(entity) {
+        case "completed":
+            return `${entity}-${player}-${getWeek()}`;
+        case "gifted":
+            return `${entity}-${player}-${getToday()}`;
+        case "bundle":
+            return `${entity}-${player}`;
+        default:
+            throw new Error("Unknown entity type " + entity);
+        
     }
 }
 
@@ -117,59 +160,10 @@ export async function getLikes() {
     return likes_cache;
 }
 
-export async function setComplete(player, id, value) {
-    // console.log("saving completed", player, id, value);
-    
-    const key = `completed-${player}-${getWeek()}`;
+export async function getEntity(player, entity) {
+    if(!player_cache[entity].players[player]) {
 
-    await dynamodb.update({
-        Key: {id: key},
-        TableName: table,
-        UpdateExpression: "set #id = :value, expiry = :expiry",
-        ExpressionAttributeValues: {
-            ":value": value,
-            ":expiry": likes_cache_expiry.toUnixInteger(),
-        },
-        ExpressionAttributeNames: {
-            "#id": id
-        },
-    })
-
-    const completed = await getCompleted(player);
-
-    completed[id] = value;
-
-    sendEvent(player, "complete", completed);
-}
-
-
-export async function setGifted(player, id, value) {
-    // console.log("saving completed", player, id, value);
-    
-    const key = `gifted-${player}-${getToday()}`;
-
-    await dynamodb.update({
-        Key: {id: key},
-        TableName: table,
-        UpdateExpression: "set #id = :value, expiry = :expiry",
-        ExpressionAttributeValues: {
-            ":value": value,
-            ":expiry": gifted_cache_expiry.toUnixInteger(),
-        },
-        ExpressionAttributeNames: {
-            "#id": id
-        },
-    })
-
-    const gifted = await getGifted(player);
-
-    gifted[id] = value;
-
-    sendEvent(player, "gifted", gifted);
-}
-
-async function getCachedItem(player, cache, key) {
-    if(!cache[player]) {   
+        const key = keyFor(entity, player);
         const item = await dynamodb.get({
             TableName: table,
             Key: {id: key},
@@ -187,26 +181,43 @@ async function getCachedItem(player, cache, key) {
 
         delete ret.id;
         delete ret.expiry;
-        cache[player] = ret;
+        player_cache[entity].players[player] = ret;
     }
 
-    return cache[player];
+    return player_cache[entity].players[player];
 }
 
-export async function getCompleted(player) {
-    checkCacheExpiries();
-    const key = `completed-${player}-${getWeek()}`;
+/**
+ * 
+ * @param {*} player 
+ * @param {"completed"|"gifted"|"bundle"} entity 
+ * @param {*} id 
+ * @param {*} value 
+ */
+export async function setEntity(player, entity, id, value) {
+    console.log("SET", player, "'s", entity, "[", id, "] to", value);
+    const key = keyFor(entity, player);
+    const expiry = expiryFor(entity);
 
-    return getCachedItem(player, complete_cache, key);
+    await dynamodb.update({
+        Key: {id: key},
+        TableName: table,
+        UpdateExpression: "set #id = :value, expiry = :expiry",
+        ExpressionAttributeValues: {
+            ":value": value,
+            ":expiry": expiry.toUnixInteger(),
+        },
+        ExpressionAttributeNames: {
+            "#id": id
+        },
+    })
+
+    const completed = await getEntity(player, entity);
+
+    completed[id] = value;
+
+    sendEvent(player, entity, completed);
 }
-
-export function getGifted(player) {
-    checkCacheExpiries();
-
-    const key = `gifted-${player}-${getToday()}`;
-    return getCachedItem(player, gifted_cache, key);
-}
-
 
 
 function sendEvent(player, type, data) {
@@ -237,7 +248,6 @@ export function addListener(player, cb) {
 
 function handleExpiry() {
     setInterval(checkCacheExpiries, 60_000).unref();
-    
 }
 
 handleExpiry();
