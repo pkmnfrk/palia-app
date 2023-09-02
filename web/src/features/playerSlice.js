@@ -9,9 +9,12 @@ export const playerSlice = createSlice({
         setPlayerId(state, action) {
             state.id = action.payload;
         },
+        setBundleSpoilers(state, action) {
+            state.bundle_spoilers = action.payload;
+        }
     }
 });
 
-export const { setPlayerId } = playerSlice.actions;
+export const { setPlayerId, setBundleSpoilers } = playerSlice.actions;
 
 export default playerSlice.reducer;

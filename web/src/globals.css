@@ -17,6 +17,11 @@ h3 {
   font-size: 16px;
 }
 
+p {
+  line-height: 1em;
+  font-size: 14px;
+}
+
 @media (max-width: 730px) {
   body {
     margin: 2px;

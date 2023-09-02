@@ -20,4 +20,6 @@
 
 .item {
     grid-row: 1 / span 2;
+
+    cursor: pointer;
 }

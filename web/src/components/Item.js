@@ -1,11 +1,13 @@
 import React from "react";
 
 import * as items from "./items/index.js";
+import { debounce } from "../utils.js";
 
 import styles from "./Item.module.css";
 import check from "./check.png";
 
-export default function Item({name, className, overlay}) {
+
+export default function Item({name, className, overlay, onClick}) {
     const id = name.toLowerCase().replace(/[^a-z]/g, "_");
 
     let overlayElement = null;
@@ -17,7 +19,7 @@ export default function Item({name, className, overlay}) {
     }
 
     return (
-        <span className={(className??"") + " " + styles.itemWrapper}>
+        <span className={(className??"") + " " + styles.itemWrapper} onClick={debounce(onClick)}>
             <img className={styles.item} src={items[id]} alt={name} />
             {overlayElement}
         </span>

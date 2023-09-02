@@ -1,11 +1,16 @@
 .itemWrapper {
     position: relative;
+    display: flex;
+    flex-wrap: wrap;
     width: 70px;
     height: 70px;
+    align-content: center;
+    justify-content: center;
+    ;
 }
 
 .item {
-    width: 70px;
+    width: 100%;
 }
 
 .overlayChecked {
