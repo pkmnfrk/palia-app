@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as dataStore from "../dataStore.js";
+import * as api from "../api.js";
 
 export const likesSlice = createSlice({
     name: "likes",
@@ -16,11 +16,11 @@ export const likesSlice = createSlice({
 
 export const setLike = (id, value) => async (dispatch) => {
     dispatch(setOne({id, value}));
-    await dataStore.setLike(id, value);
+    await api.setLike(id, value);
 };
 
 export const refreshLikes = () => async (dispatch) => {
-    const likes = await dataStore.getLikes();
+    const likes = await api.getLikes();
     dispatch(setAll(likes));
 }
 

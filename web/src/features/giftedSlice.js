@@ -1,5 +1,5 @@
 import { createSlice } from "@reduxjs/toolkit";
-import * as dataStore from "../dataStore.js";
+import * as api from "../api.js";
 
 export const giftedSlice = createSlice({
     name: "gifted",
@@ -17,12 +17,12 @@ export const giftedSlice = createSlice({
 export const setGifted = (id, value) => async (dispatch, getState) => {
     dispatch(setOne({id, value}));
     const playerId = getState().player.id;
-    await dataStore.setGifted(playerId, id, value);
+    await api.setEntity(playerId, api.ENTITY_GIFTED, id, value);
 };
 
 export const refreshGifted = () => async (dispatch, getState) => {
     const playerId = getState().player.id;
-    const gifted = await dataStore.getGifted(playerId);
+    const gifted = await api.getEntity(playerId, api.ENTITY_GIFTED);
     dispatch(setAll(gifted));
 };
 

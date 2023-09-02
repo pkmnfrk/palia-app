@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import * as dataStore from "../dataStore.js";
+import * as api from "../api.js";
 
 export const completedSlice = createSlice({
     name: "completed",
@@ -17,12 +17,12 @@ export const completedSlice = createSlice({
 export const setCompleted = (id, value) => async (dispatch, getState) => {
     dispatch(setOne({id, value}));
     const playerId = getState().player.id;
-    await dataStore.setComplete(playerId, id, value);
+    await api.setEntity(playerId, api.ENTITY_COMPLETED, id, value);
 };
 
 export const refreshCompleted = () => async (dispatch, getState) => {
     const playerId = getState().player.id;
-    const completed = await dataStore.getCompleted(playerId);
+    const completed = await api.getEntity(playerId, api.ENTITY_COMPLETED);
     dispatch(setAll(completed));
 };
 
