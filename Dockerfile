@@ -5,6 +5,7 @@ ENV API_ROOT=/api
 
 WORKDIR /var/app
 COPY web /var/app
+ADD VERSION /var/app/.env
 
 RUN npm i
 RUN npm run build && cp public/favicon.png dist/
