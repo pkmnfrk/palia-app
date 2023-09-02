@@ -1,11 +1,17 @@
 import React from "react";
 
+import { debounce } from "../utils.js";
+
 import styles from "./Button.module.css";
 
-function calcStyles(active, disabled) {
+function calcStyles(className, active, disabled) {
     const ret = [
         styles.button,
     ];
+    if(className) {
+        ret.push(className);
+    }
+
     if(active) {
         ret.push(styles.active);
     }
@@ -16,12 +22,12 @@ function calcStyles(active, disabled) {
     return ret.join(" ");
 }
 
-export default function Button({children, active, disabled, onClick}) {
+export default function Button({children, className, active, disabled, onClick}) {
     return (
         <button 
-            className={calcStyles(active, disabled)}
+            className={calcStyles(className, active, disabled)}
             disabled={disabled}
-            onClick={onClick}
+            onClick={onClick ? debounce(onClick) : undefined}
             >{children}</button>
     )
 }
