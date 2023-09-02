@@ -37,7 +37,7 @@ export default function Home() {
                 <Button active={tab == "villagers"} onClick={() => changeTab("villagers")}>Villagers</Button>
                 <Button active={tab == "bundles"} onClick={() => changeTab("bundles")}>Bundles</Button>
                 <Button active={tab == "changelog"} onClick={() => changeTab("changelog")}>Changelog</Button>
-                <br />
+                <hr className={styles.divider}/>
                 {tab == "villagers" ? <VillagerPage /> : null}
                 {tab == "bundles" ? <BundlesPage /> : null}
                 {tab == "changelog" ? <ChangelogPage /> : null}

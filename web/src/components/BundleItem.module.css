@@ -9,6 +9,9 @@
     padding: 10px;
 }
 
+.bundleItem.water {
+    background-color: rgb(188, 210, 251);
+}
 
 .bundleItem h4 {
     margin: 0;

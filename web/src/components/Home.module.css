@@ -1,3 +1,9 @@
 footer {
     text-align: center;
 }
+
+.divider {
+    border-style: solid;
+    border-color: #a07b00;
+    margin: 10px 0;
+}
