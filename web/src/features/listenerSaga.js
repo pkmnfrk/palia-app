@@ -26,7 +26,7 @@ function* createListener(playerId) {
             const data = JSON.parse(event.data);
             emit(setLiked(data));
         });
-        listener.addEventListener("complete", (event) => {
+        listener.addEventListener("completed", (event) => {
             const data = JSON.parse(event.data);
             emit(setCompleted(data));
         })
@@ -34,11 +34,16 @@ function* createListener(playerId) {
             const data = JSON.parse(event.data);
             emit(setGifted(data));
         })
-        listener.addEventListener("weekly_reset", (event) => {
-            refresh(true);
-        })
-        listener.addEventListener("daily_reset", (event) => {
-            refresh(true);
+        listener.addEventListener("reset", (event) => {
+            const data = JSON.parse(event.data);
+            switch(data.entity) {
+                case "likes":
+                    emit(refreshLikes()); break;
+                case "completed":
+                    emit(refreshCompleted()); break;
+                case "gifted":
+                    emit(refreshGifted()); break;
+            }
         })
         listener.addEventListener("version", (event) => {
             const expected_version = event.data;
