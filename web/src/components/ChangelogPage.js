@@ -3,10 +3,12 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
-            <h2>Sep ??, 2023</h2>
+            <h2>Sep 2, 2023</h2>
             <ul>
-                <li>[Add] Changelog page</li>
-                <li>[Other] Lots of internal refactoring</li>
+                <li>[Add] Bundles tracker! Now you can easily keep track of your required bundles without visiting the Temple of the Night Sky.</li>
+                <li>[Add] Additionally, you can choose to show spoilers of where each item can be found.</li>
+                <li>[Add] Changelog page. Hi, you're looking at it now!</li>
+                <li>[Other] Lots of internal refactoring. It is now much easier to add new data types in the future, if needed</li>
             </ul>
 
             <h2>Aug 31, 2023</h2>
