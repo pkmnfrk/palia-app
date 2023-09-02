@@ -1,0 +1,21 @@
+.vault {
+    display: flex;
+    align-items: center;
+    justify-items: start;
+    flex-wrap: wrap;
+    gap: 20px
+}
+
+.bundleWrapper {
+    width: 48%;
+    display: inline-block;
+}
+
+.bundleWrapper h3 {
+    text-align: center;
+}
+
+.bundle {
+    list-style: none;
+    padding-left: 0;
+}

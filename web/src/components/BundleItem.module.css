@@ -1,0 +1,19 @@
+.bundleItem {
+    display: grid;
+    grid-template-columns: 74px 1fr;
+    grid-template-rows: 37px 37px;
+    align-items: center;
+    border: 1px solid black;
+    border-radius: 10px;
+    margin-bottom: 5px;
+    padding: 10px;
+}
+
+
+.bundleItem h4 {
+    margin: 0;
+}
+
+.item {
+    grid-row: 1 / span 2;
+}

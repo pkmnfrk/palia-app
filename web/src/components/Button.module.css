@@ -1,0 +1,23 @@
+.button {
+    display: inline-block;
+    border: 3px outset rgb(102, 86, 41);
+    background-color: rgb(199, 169, 85);
+    padding: 7px 15px;
+    margin-right: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+}
+
+.button:active:not(.disabled) {
+    border-style: inset;
+}
+
+.button.active {
+    background-color: hsl(96, 50%, 56%);
+}
+
+.button.disabled {
+    /* color: #666; */
+    background-color: rgb(168, 152, 108);
+    cursor: default;
+}
