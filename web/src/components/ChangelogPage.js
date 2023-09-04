@@ -8,10 +8,11 @@ export default function ChangelogPage() {
                 <li>[Add] You can now "target" villagers. If you need a reminder as to who you want to talk to or give gifts to or whatever, you can right-click or long-press (on mobile) to target them. This will do two things:
                     <ol>
                         <li>It will mark them with a special target icon and colour</li>
-                        <li>It will float them to the top of the list.</li>
+                        <li>It will float them to the top of the list</li>
                     </ol>
                     Hope this helps all you scatterbrains (like me)!
                 </li>
+                <li>[Add] When setting the completed flag on a like, we now automatically mark the villager in question as gifted. This will save an estimated 2000 clicks over the course of a year!</li>
                 <li>[Change] Made the "completed" checkboxes bigger so they're easier to hit on mobile</li>
             </ul>
             <h2>Sep 4, 2023 - 1.1.2</h2>

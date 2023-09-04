@@ -14,7 +14,7 @@ export const giftedSlice = createSlice({
         },
         setOne(state, action) {
             state[action.payload.id] = action.payload.value;
-        }
+        },
     }
 });
 
@@ -29,6 +29,16 @@ export const refreshGifted = () => async (dispatch, getState) => {
     const gifted = await api.getEntity(playerId, api.ENTITY_GIFTED);
     dispatch(setAll(gifted));
 };
+
+export const giveGift = (id) => async (dispatch, getState) => {
+    console.log("Giving gift to", id);
+    const giftState = {
+        ...getState().gifted[id] ?? {},
+        gifted: true,
+    };
+    dispatch(setGifted(id, giftState));
+
+}
 
 export const { setAll, setOne } = giftedSlice.actions;
 

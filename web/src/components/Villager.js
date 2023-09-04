@@ -91,16 +91,16 @@ export default function Villager({name}) {
                 <h2 className={styles.villagerName}>{name}</h2>
                 
                 <img className={styles.icon} src={like} alt="Likes" />
-                <VillagerLike id={id + "_1"} />
+                <VillagerLike id={id + "_1"} villager={id} />
 
                 <img className={styles.icon} src={like} alt="Likes" />
-                <VillagerLike id={id + "_2"} />
+                <VillagerLike id={id + "_2"} villager={id} />
 
                 <img className={styles.icon} src={love} alt="Loves" />
-                <VillagerLike id={id + "_3"} />
+                <VillagerLike id={id + "_3"} villager={id} />
                 
                 <img className={styles.icon} src={love} alt="Loves" />
-                <VillagerLike id={id + "_4"} />
+                <VillagerLike id={id + "_4"} villager={id} />
                 
             </section>
         </div>
