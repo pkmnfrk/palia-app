@@ -3,6 +3,16 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
+            <h2>Sep 4, 2023 - 1.2.0</h2>
+            <ul>
+                <li>[Add] You can now "target" villagers. If you need a reminder as to who you want to talk to or give gifts to or whatever, you can right-click or long-press (on mobile) to target them. This will do two things:
+                    <ol>
+                        <li>It will mark them with a special target icon and colour</li>
+                        <li>It will float them to the top of the list.</li>
+                    </ol>
+                    Hope this helps all you scatterbrains (like me)!
+                </li>
+            </ul>
             <h2>Sep 4, 2023 - 1.1.2</h2>
             <ul>
                 <li>[Fix] Another last second change (to fix a warning) broke the web build, causing it to constantly refresh</li>
