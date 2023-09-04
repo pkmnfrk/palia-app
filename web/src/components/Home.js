@@ -45,7 +45,7 @@ export default function Home() {
             <footer>
                 <a href={`/?playerId=${playerId}`}>Link to your personalized page</a> - This is unique to you!<br />
                 This is a fan project, not associated with Singularity 6. All images &copy; Singularity 6. Website &copy; 2023 Mike Caron<br />
-                Version {process.env.VERSION} ({process.env.CDNV})
+                Version {process.env.VERSION} ({process.env.CDNV.substring(0, 8)})
             </footer>
         </>
     )

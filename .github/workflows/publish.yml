@@ -1,0 +1,37 @@
+name: publish
+
+on:
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: upload image to ECR
+        uses: appleboy/docker-ecr-action@master
+        with:
+          access_key: ${{ secrets.aws_access_key_id }}
+          secret_key: ${{ secrets.aws_secret_access_key }}
+          registry: 285209584037.dkr.ecr.us-east-1.amazonaws.com
+          cache_from: 285209584037.dkr.ecr.us-east-1.amazonaws.com/palia-app-repo
+          repo: palia-app-repo
+          region: us-east-1
+          auto_tag: false
+          daemon_off: false
+          dockerfile: ./Dockerfile
+          context: .
+          build_args: "cdnv=${{github.sha}}"
+          tags: "latest,${{github.sha}}"
+      - uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+      - run: npm i
+      - run: |
+          echo "AWS_ACCESS_KEY_ID=${{ secrets.aws_access_key_id }}" >> "$GITHUB_ENV"
+          echo "AWS_SECRET_ACCESS_KEY=${{ secrets.aws_secret_access_key }}" >> "$GITHUB_ENV"
+          echo "AWS_DEFAULT_REGION=us-east-1" >> "$GITHUB_ENV"
+      - run: sls deploy --stage prd --param="cdnv=${{ github.sha }}"
+
+
