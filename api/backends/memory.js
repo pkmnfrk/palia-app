@@ -29,3 +29,7 @@ export async function get(key) {
 
     return ret;
 }
+
+export function getNow() {
+    return DateTime.now().setZone("America/New_York");
+}

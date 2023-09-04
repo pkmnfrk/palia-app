@@ -36,28 +36,25 @@ let player_cache = {
     }
 };
 
-function getNow() {
-    return DateTime.now().setZone("America/New_York").plus({milliseconds: fakeOffset});
-}
 
 function nextDailyRolloverDate() {
-    return getNow().plus({ days: 1}).startOf("day");
+    return backend.getNow().plus({ days: 1}).startOf("day");
 }
 
 function nextWeeklyRolloverDate() {
-    return getNow().plus({ weeks: 1 }).startOf("week");
+    return backend.getNow().plus({ weeks: 1 }).startOf("week");
 }
 
 function getToday() {
-    return getNow().startOf("day").toISODate();
+    return backend.getNow().startOf("day").toISODate();
 }
 
 function getWeek() {
-    return getNow().startOf("week").toISODate();
+    return backend.getNow().startOf("week").toISODate();
 }
 
 function checkCacheExpiries() {
-    const now = getNow();
+    const now = backend.getNow();
     if(likes_cache_expiry < now) {
         likes_cache = null;
         likes_cache_expiry = nextWeeklyRolloverDate();
@@ -87,7 +84,7 @@ function expiryFor(entity) {
         case "gifted":
             return nextDailyRolloverDate();
         case "bundle":
-            return getNow().plus({year: 5});
+            return backend.getNow().plus({year: 5});
         default:
             throw new Error("Unknown entity type " + entity);
         
