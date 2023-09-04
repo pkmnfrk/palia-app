@@ -64,10 +64,16 @@ export default function Villager({name}) {
     }
 
     useEffect(() => {
-        portraitRef.current.addEventListener("long-press", onContextMenu);
-        return () => {
-            portraitRef.current.removeEventListener("long-press", onContextMenu);
+        const el = portraitRef.current;
+        if(el) {
+            el.addEventListener("long-press", onContextMenu);
         }
+        return () => {
+            if(el) {
+                el.removeEventListener("long-press", onContextMenu);
+            }
+        }
+        
     })
 
     return (
