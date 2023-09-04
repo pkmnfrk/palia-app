@@ -32,6 +32,6 @@ jobs:
           echo "AWS_ACCESS_KEY_ID=${{ secrets.aws_access_key_id }}" >> "$GITHUB_ENV"
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.aws_secret_access_key }}" >> "$GITHUB_ENV"
           echo "AWS_DEFAULT_REGION=us-east-1" >> "$GITHUB_ENV"
-      - run: sls deploy --stage prd --param="cdnv=${{ github.sha }}"
+      - run: sls deploy --stage prd --param="--build-arg cdnv=${{ github.sha }}"
 
 
