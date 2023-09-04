@@ -3,6 +3,11 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
+            <h2>Sep 4, 2023</h2>
+            <ul>
+                <li>[Fix] Reduced the ping delay on the EventSource channel from 3 minutes to 45 seconds. The browser was actually disconnecting after a minute. I believe this is the cause of the weekly like rollover not automatically refreshing.</li>
+                <li>[Other] Refactored the backend a little bit to make it easier to debug date-related issues.</li>
+            </ul>
             <h2>Sep 2, 2023</h2>
             <ul>
                 <li>[Add] Bundles tracker! Now you can easily keep track of your required bundles without visiting the Temple of the Night Sky.</li>
