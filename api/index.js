@@ -41,8 +41,8 @@ apiRouter.get("/likes", async (req, resp) => {
 })
 
 apiRouter.put("/like/:id", async (req, resp) => {
-    const value = req.body;
     try {
+        const value = JSON.parse(req.body);
         await setLike(req.params.id, value);
         resp.status(204);
     } catch(e) {
@@ -73,12 +73,8 @@ apiRouter.get(`/player/:playerId/${entityType}`, async (req, resp) => {
 })
 
 apiRouter.put(`/player/:playerId/${entityType}/:id`, async (req, resp) => {
-    const value = (req.body === "true" ? true : (req.body === "false" ? false : null));
-
     try {
-        if(value === null) {
-            throw new Error("Invalid values");
-        }
+        const value = JSON.parse(req.body);
         await setEntity(req.params.playerId, req.params.entity, req.params.id, value);
         resp.status(204);
     } catch(e) {

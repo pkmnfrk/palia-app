@@ -10,20 +10,42 @@ import * as portraits from "./villagers/index.js";
 import like from "./like.png";
 import love from "./love.png";
 import gift from "./gift.png";
+import target from "./target.png";
+
+function styleForState(state) {
+    if(state === true) {
+        return styles.gifted;
+    } else if(state === "target") {
+        return styles.targetted;
+    }
+    return "";
+}
 
 export default function Villager({name}) {
     const id = name.toLowerCase().replace(/[^a-z]/g, '_');
 
     // const gifteds = useContext(GiftedContext);
-    const isGifted = useSelector(state => !!state.gifted[id]);
+    const giftedState = useSelector(state => state.gifted[id]);
     const dispatch = useDispatch();
+
+    const onClick = (e) => {
+        const newGifted = giftedState !== true ? true : false;
+        dispatch(setGifted(id, newGifted));
+    };
+
+    const onContextMenu = (e) => {
+        e.preventDefault();
+        const newGifted = giftedState !== "target" ? "target" : false;
+        dispatch(setGifted(id, newGifted));
+    }
 
     return (
         <div className={styles.villagerWrapper}>
-            <section className={styles.villager + " " + (isGifted ? styles.gifted : "")}>
-                <span className={styles.portraitWrapper} onClick={debounce(() => dispatch(setGifted(id, !isGifted)))}>
+            <section className={styles.villager + " " + styleForState(giftedState)}>
+                <span className={styles.portraitWrapper} onClick={debounce(onClick)} onContextMenu={debounce(onContextMenu)}>
                     <img className={styles.portrait} src={portraits[id]} alt=""/>
-                    {isGifted ? (<img className={styles.gift} src={gift} alt="Gifted" />) : null}
+                    {giftedState === true ? (<img className={styles.gift} src={gift} alt="Gifted" />) : null}
+                    {giftedState === "target" ? (<img className={styles.gift} src={target} alt="Targetted" />) : null}
                 </span>
                 <h2 className={styles.villagerName}>{name}</h2>
                 

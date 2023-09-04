@@ -67,6 +67,10 @@
     background-color: lime;
 }
 
+.targetted .portraitWrapper {
+    background-color: blue;
+}
+
 .portrait {
     vertical-align: middle;
     margin: 2px 10px 0px 2px;

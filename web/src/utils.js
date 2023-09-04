@@ -2,7 +2,7 @@ export function debounce(action) {
     if(!action) return undefined;
     
     let bouncetimer = 0;
-    return () => {
+    return (...args) => {
         if(bouncetimer) {
             return;
         }
@@ -11,6 +11,6 @@ export function debounce(action) {
             bouncetimer = null;
         }, 100);
         
-        action();
+        action(...args);
     }
 }

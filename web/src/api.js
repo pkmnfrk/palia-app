@@ -5,7 +5,7 @@ export const ENTITY_BUNDLE="bundle";
 export async function setLike(id, value) {
     await fetch(`${process.env.API_ROOT}/like/${id}`, {
         method: "PUT",
-        body: value,
+        body: JSON.stringify(value),
     })
 }
 
@@ -16,7 +16,7 @@ export async function getLikes() {
 export async function setEntity(player, entity, id, value) {
     await fetch(`${process.env.API_ROOT}/player/${player}/${entity}/${id}`, {
         method: "PUT",
-        body: value,
+        body: JSON.stringify(value),
     })    
 }
 
