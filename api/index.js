@@ -108,7 +108,7 @@ apiRouter.get("/listen/:playerId", async (req, resp) => {
         const version = process.env.CDNV ?? "test";
         resp.write(`event: version\ndata: ${version}\n\n`);
         while(!req.socket.closed) {
-            await delay(180_000);
+            await delay(config.get("listener_ping_delay"));
             resp.write(":ping\n\n");
         }
     } finally {

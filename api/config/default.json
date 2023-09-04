@@ -1,11 +1,8 @@
 {
     "table": "palia-app-dev",
-    "allowed_origins": [
-        "http://localhost:5000",
-        "http://localhost:8081",
-        "http://localhost:8085"
-    ],
+    "allowed_origins": true,
     "static_root": "../web/dist",
     "request_logging": false,
-    "cdnv": "test"
+    "cdnv": "test",
+    "listener_ping_delay": 45000
 }
