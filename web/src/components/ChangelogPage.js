@@ -3,6 +3,10 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
+            <h2>Sep 4, 2023 - 1.1.1 (hotfix)</h2>
+            <ul>
+                <li>[Fix] Another last second change (to fix a warning) broke the web build, causing it to constantly refresh</li>
+            </ul>
             <h2>Sep 4, 2023 - 1.1.1</h2>
             <ul>
                 <li>[Fix] Reduced the ping delay on the EventSource channel from 3 minutes to 45 seconds. The browser was actually disconnecting after a minute. I believe this is the cause of the weekly like rollover not automatically refreshing.</li>
