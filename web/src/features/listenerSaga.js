@@ -9,6 +9,7 @@ import { setAll as setBundle, refreshBundle} from "./bundleSlice.js";
 
 /** @type {import("redux-saga").EventChannel} */
 let listener = null;
+let done_first_fetch = false;
 
 function* createListener(playerId) {
     return eventChannel((emit) => {
@@ -51,6 +52,14 @@ function* createListener(playerId) {
                     window.location = window.location; //refresh
                 }, 120_000); // wait a while for the server to stabilize
             }
+
+            if(!done_first_fetch || actual_version === expected_version) {
+                emit(refreshLikes());
+                emit(refreshCompleted());
+                emit(refreshGifted());
+                emit(refreshBundle());
+                done_first_fetch = true;
+            }
         });
 
         return () => {
@@ -65,10 +74,6 @@ function* setUpListener(action) {
     }
 
     listener = yield call(createListener, action.payload);
-    yield put(refreshLikes())
-    yield put(refreshCompleted())
-    yield put(refreshGifted());
-    yield put(refreshBundle());
 
     while(true) {
         const action = yield take(listener);
