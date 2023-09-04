@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./Villager.module.css";
@@ -32,6 +32,8 @@ export default function Villager({name}) {
     const giftedState = useSelector(state => state.gifted[id]) ?? {};
     const dispatch = useDispatch();
 
+    const portraitRef = useRef(null);
+
     const onClick = (e) => {
         let newGifted = {
             ...giftedState,
@@ -50,11 +52,33 @@ export default function Villager({name}) {
         dispatch(setGifted(id, newGifted));
     }
 
+    const onTouchStart = (e) => {
+        e.preventDefault();
+        
+        // alert("start");
+    }
+    
+
+    const onTouchEnd = (e) => {
+        // alert("end");
+    }
+
+    useEffect(() => {
+        portraitRef.current.addEventListener("long-press", onContextMenu);
+        return () => {
+            portraitRef.current.removeEventListener("long-press", onContextMenu);
+        }
+    })
+
     return (
         <div className={styles.villagerWrapper}>
             <section className={styleForState(giftedState)}>
-                <span className={styles.portraitWrapper} onClick={debounce(onClick)} onContextMenu={debounce(onContextMenu)}>
-                    <img className={styles.portrait} src={portraits[id]} alt=""/>
+                <span ref={portraitRef} className={styles.portraitWrapper}
+                    onClick={debounce(onClick)}
+                    onContextMenu={debounce(onContextMenu)}
+                    data-long-press-delay="750"
+                >
+                    <img className={styles.portrait} src={portraits[id]} alt="" />
                     {giftedState.gifted ? (<img className={styles.gift} src={gift} alt="Gifted" />) : null}
                     {giftedState.targetted ? (<img className={styles.target} src={target} alt="Targetted" />) : null}
                 </span>
