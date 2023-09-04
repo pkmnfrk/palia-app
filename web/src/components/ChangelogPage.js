@@ -3,7 +3,7 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
-            <h2>Sep 4, 2023 - 1.1.1 (hotfix)</h2>
+            <h2>Sep 4, 2023 - 1.1.2</h2>
             <ul>
                 <li>[Fix] Another last second change (to fix a warning) broke the web build, causing it to constantly refresh</li>
             </ul>
