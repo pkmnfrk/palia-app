@@ -4,3 +4,4 @@ public
 src
 CDNV
 web/.env
+api/config/local.json

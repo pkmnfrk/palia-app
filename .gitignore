@@ -3,3 +3,4 @@ web/dist
 .serverless
 CDNV
 .env
+api/config/local.json

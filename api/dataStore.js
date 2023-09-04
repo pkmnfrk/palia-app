@@ -5,6 +5,7 @@ import * as dynamoDbBackend from "./backends/dynamodb.js";
 import * as memoryBackend from "./backends/memory.js";
 
 function chooseBackend() {
+    console.log("Requested backend is:", config.get("backend"));
     switch(config.get("backend")) {
         case "dynamodb":
             return dynamoDbBackend;
