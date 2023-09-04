@@ -6,6 +6,7 @@
     margin-right: 5px;
     border-radius: 15px;
     cursor: pointer;
+    color: black;
 }
 
 .button:active:not(.disabled) {
