@@ -22,7 +22,7 @@ jobs:
           daemon_off: false
           dockerfile: ./Dockerfile
           context: .
-          build_args: "cdnv=${{github.sha}}"
+          args: "cdnv=${{github.sha}}"
           tags: "latest,${{github.sha}}"
       - uses: actions/setup-node@v3
         with:
