@@ -6,7 +6,11 @@ export const giftedSlice = createSlice({
     initialState: {},
     reducers: {
         setAll(state, action) {
-            return action.payload;
+            const ret = action.payload;
+            for(const key of Object.keys(ret)) {
+                ret[key] = fixState(ret[key]);
+            }
+            return ret;
         },
         setOne(state, action) {
             state[action.payload.id] = action.payload.value;
@@ -29,3 +33,29 @@ export const refreshGifted = () => async (dispatch, getState) => {
 export const { setAll, setOne } = giftedSlice.actions;
 
 export default giftedSlice.reducer;
+
+function fixState(state) {
+    if(state === true) {
+        return {
+            gifted: true,
+            targetted: false,
+        };
+    } else if(state === false) {
+        return {
+            gifted: false,
+            targetted: false,
+        };
+    } else if(state == "target") {
+        return {
+            gifted: false,
+            targetted: true,
+        };
+    } else if(!state) {
+        return {
+            gifted: false,
+            targetted: false,
+        }
+    }
+
+    return state;
+}

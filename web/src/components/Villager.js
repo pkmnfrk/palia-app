@@ -13,39 +13,50 @@ import gift from "./gift.png";
 import target from "./target.png";
 
 function styleForState(state) {
-    if(state === true) {
-        return styles.gifted;
-    } else if(state === "target") {
-        return styles.targetted;
+    const ret = [
+        styles.villager,
+    ];
+    if(state.targetted) {
+        ret.push(styles.targetted);
     }
-    return "";
+    if(state.gifted) {
+        ret.push(styles.gifted);
+    }
+    return ret.join(" ");
 }
 
 export default function Villager({name}) {
     const id = name.toLowerCase().replace(/[^a-z]/g, '_');
 
     // const gifteds = useContext(GiftedContext);
-    const giftedState = useSelector(state => state.gifted[id]);
+    const giftedState = useSelector(state => state.gifted[id]) ?? {};
     const dispatch = useDispatch();
 
     const onClick = (e) => {
-        const newGifted = giftedState !== true ? true : false;
+        let newGifted = {
+            ...giftedState,
+            gifted: !giftedState.gifted,
+        }
+        
         dispatch(setGifted(id, newGifted));
     };
 
     const onContextMenu = (e) => {
         e.preventDefault();
-        const newGifted = giftedState !== "target" ? "target" : false;
+        const newGifted = {
+            ...giftedState,
+            targetted: !giftedState.targetted,
+        }
         dispatch(setGifted(id, newGifted));
     }
 
     return (
         <div className={styles.villagerWrapper}>
-            <section className={styles.villager + " " + styleForState(giftedState)}>
+            <section className={styleForState(giftedState)}>
                 <span className={styles.portraitWrapper} onClick={debounce(onClick)} onContextMenu={debounce(onContextMenu)}>
                     <img className={styles.portrait} src={portraits[id]} alt=""/>
-                    {giftedState === true ? (<img className={styles.gift} src={gift} alt="Gifted" />) : null}
-                    {giftedState === "target" ? (<img className={styles.gift} src={target} alt="Targetted" />) : null}
+                    {giftedState.gifted ? (<img className={styles.gift} src={gift} alt="Gifted" />) : null}
+                    {giftedState.targetted ? (<img className={styles.target} src={target} alt="Targetted" />) : null}
                 </span>
                 <h2 className={styles.villagerName}>{name}</h2>
                 

@@ -15,8 +15,8 @@ export default function VillagerPage() {
     myVillagers.sort((a, b) => {
         const aId = a.toLowerCase().replace(/[^a-z]/g, '_');
         const bId = b.toLowerCase().replace(/[^a-z]/g, '_');
-        const aTargeted = giftedState[aId] === "target";
-        const bTargeted = giftedState[bId] === "target";
+        const aTargeted = (giftedState[aId]??{}).targetted;
+        const bTargeted = (giftedState[bId]??{}).targetted;
 
         if(aTargeted !== bTargeted) {
             if(aTargeted) {
