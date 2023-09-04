@@ -3,6 +3,12 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
+            <h2>Sep 4, 2023 - 1.2.1</h2>
+            <ul>
+                <li>[Add] Added a help page! Now you can see all the little features that are available, and some information about time in Palia.</li>
+                <li>[Fix] Fixed the layout on narrow screens. It should no longer have weird margins that waste a tiny bit of already-precious space.</li>
+                <li>[Fix] Also, on iOS the buttons incorrectly had blue text instead of black. Annoying!</li>
+            </ul>
             <h2>Sep 4, 2023 - 1.2.0</h2>
             <ul>
                 <li>[Add] You can now "target" villagers. If you need a reminder as to who you want to talk to or give gifts to or whatever, you can right-click or long-press (on mobile) to target them. This will do two things:
