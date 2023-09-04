@@ -6,8 +6,6 @@ import { DateTime } from "luxon";
 const table = config.get("table");
 const dynamodb = DynamoDBDocument.from(new DynamoDBClient());
 
-const records = {};
-
 export async function update(key, field, value, expiry) {
     await dynamodb.update({
         Key: {id: key},

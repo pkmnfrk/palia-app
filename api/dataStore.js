@@ -1,7 +1,14 @@
-
-import * as backend from "./backends/dynamodb.js";
 import { DateTime } from "luxon";
 import config from "config";
+
+import * as dynamoDbBackend from "./backends/dynamodb.js";
+import * as memoryBackedn from "./backends/memory.js";
+
+function chooseBackend() {
+    return dynamoDbBackend;
+}
+
+const backend = chooseBackend();
 
 const fakeOffset = (() => {
     return 0;
