@@ -27,7 +27,7 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: '18'
-      - run: npm i
+      - run: npm i -g serverless
       - run: |
           echo "AWS_ACCESS_KEY_ID=${{ secrets.aws_access_key_id }}" >> "$GITHUB_ENV"
           echo "AWS_SECRET_ACCESS_KEY=${{ secrets.aws_secret_access_key }}" >> "$GITHUB_ENV"
