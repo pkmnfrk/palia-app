@@ -5,9 +5,12 @@ import { useSelector, useDispatch } from "react-redux";
 import VillagerPage from "./VillagerPage.js";
 import ChangelogPage from "./ChangelogPage.js";
 import BundlesPage from "./BundlesPage.js";
+import HelpPage from "./HelpPage.js";
+
 import Button from "./Button.js";
 
 import styles from "./Home.module.css";
+
 
 
 export default function Home() {
@@ -36,10 +39,12 @@ export default function Home() {
                 <h1>Palia Tracker</h1>
                 <Button active={tab == "villagers"} onClick={() => changeTab("villagers")}>Villagers</Button>
                 <Button active={tab == "bundles"} onClick={() => changeTab("bundles")}>Bundles</Button>
+                <Button active={tab == "help"} onClick={() => changeTab("help")}>Help</Button>
                 <Button active={tab == "changelog"} onClick={() => changeTab("changelog")}>Changelog</Button>
                 <hr className={styles.divider}/>
                 {tab == "villagers" ? <VillagerPage /> : null}
                 {tab == "bundles" ? <BundlesPage /> : null}
+                {tab == "help" ? <HelpPage /> : null}
                 {tab == "changelog" ? <ChangelogPage /> : null}
             </main>
             <footer>
