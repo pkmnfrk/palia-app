@@ -4,5 +4,6 @@
     "static_root": "../web/dist",
     "request_logging": false,
     "cdnv": "test",
-    "listener_ping_delay": 45000
+    "listener_ping_delay": 45000,
+    "backend": "memory"
 }

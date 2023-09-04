@@ -1,3 +1,4 @@
 {
-    "static_root": "./dist"
+    "static_root": "./dist",
+    "backend": "memory"
 }

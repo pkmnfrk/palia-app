@@ -4,5 +4,6 @@
         "https://palia.mike-caron.ca"
     ],
     "static_root": "./dist",
-    "request_logging": false
+    "request_logging": false,
+    "backend": "dynamodb"
 }

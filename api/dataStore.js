@@ -2,10 +2,17 @@ import { DateTime } from "luxon";
 import config from "config";
 
 import * as dynamoDbBackend from "./backends/dynamodb.js";
-import * as memoryBackedn from "./backends/memory.js";
+import * as memoryBackend from "./backends/memory.js";
 
 function chooseBackend() {
-    return dynamoDbBackend;
+    switch(config.get("backend")) {
+        case "dynamodb":
+            return dynamoDbBackend;
+        case "memory":
+            return memoryBackend;
+        default:
+            throw new Error("Undefined backend");
+    }
 }
 
 const backend = chooseBackend();
