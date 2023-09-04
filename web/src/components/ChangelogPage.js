@@ -12,6 +12,7 @@ export default function ChangelogPage() {
                     </ol>
                     Hope this helps all you scatterbrains (like me)!
                 </li>
+                <li>[Change] Made the "completed" checkboxes bigger so they're easier to hit on mobile</li>
             </ul>
             <h2>Sep 4, 2023 - 1.1.2</h2>
             <ul>
