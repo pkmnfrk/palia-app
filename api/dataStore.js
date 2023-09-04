@@ -1,6 +1,5 @@
 
-import { DynamoDBClient } from "@aws-sdk/client-dynamodb";
-import { DynamoDBDocument } from "@aws-sdk/lib-dynamodb";
+import * as backend from "./backends/dynamodb.js";
 import { DateTime } from "luxon";
 import config from "config";
 
@@ -10,9 +9,6 @@ const fakeOffset = (() => {
     // const pretendTime = realNow.set({ hour: 23, minute: 59, second: 0, millisecond: 0});
     // return pretendTime.diff(realNow);
 })();
-
-const table = config.get("table");
-const dynamodb = DynamoDBDocument.from(new DynamoDBClient());
 
 const listeners = [];
 
@@ -109,18 +105,8 @@ export async function setLike(id, value) {
     console.log("saving likes", id, value);
 
     const key = `root-likes-${getWeek()}`;
-    await dynamodb.update({
-        Key: {id: key},
-        TableName: table,
-        UpdateExpression: "set #id = :value, expiry = :expiry",
-        ExpressionAttributeValues: {
-            ":value": value,
-            ":expiry": likes_cache_expiry.toUnixInteger()
-        },
-        ExpressionAttributeNames: {
-            "#id": id
-        },
-    })
+
+    await backend.update(key, id, value, likes_cache_expiry);
 
     await getLikes();
 
@@ -136,20 +122,7 @@ export async function getLikes() {
 
     if(!likes_cache) {
         const key = `root-likes-${getWeek()}`;
-        const item = await dynamodb.get({
-            TableName: table,
-            Key: {id: key},
-        });
-
-        let ret = item.Item;
-
-        if(ret && ret.expiry < getNow().toUnixInteger()) {
-            ret = null;
-        }
-
-        if(!ret) {
-            ret = {};
-        }
+        const ret = await backend.get(key);
 
         delete ret.id;
         delete ret.expiry;
@@ -164,20 +137,7 @@ export async function getEntity(player, entity) {
     if(!player_cache[entity].players[player]) {
 
         const key = keyFor(entity, player);
-        const item = await dynamodb.get({
-            TableName: table,
-            Key: {id: key},
-        });
-
-        let ret = item.Item;
-
-        if(ret && ret.expiry < getNow().toUnixInteger()) {
-            ret = null;
-        }
-
-        if(!ret) {
-            ret = {};
-        }
+        const ret = await backend.get(key);
 
         delete ret.id;
         delete ret.expiry;
@@ -199,18 +159,7 @@ export async function setEntity(player, entity, id, value) {
     const key = keyFor(entity, player);
     const expiry = expiryFor(entity);
 
-    await dynamodb.update({
-        Key: {id: key},
-        TableName: table,
-        UpdateExpression: "set #id = :value, expiry = :expiry",
-        ExpressionAttributeValues: {
-            ":value": value,
-            ":expiry": expiry.toUnixInteger(),
-        },
-        ExpressionAttributeNames: {
-            "#id": id
-        },
-    })
+    await backend.update(key, id, value, expiry);
 
     const completed = await getEntity(player, entity);
 
