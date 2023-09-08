@@ -3,6 +3,10 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
+            <h2>Sep 8, 2023 - 1.3.0</h2>
+            <ul>
+                <li>[Change] Big changes under the hood! We replaced Server-Sent Events with Websockets, which are more efficient use of resources. This shouldn't affect your usage of the app, but efficiency is always better!</li>
+            </ul>
             <h2>Sep 4, 2023 - 1.2.1</h2>
             <ul>
                 <li>[Add] Added a help page! Now you can see all the little features that are available, and some information about time in Palia.</li>
