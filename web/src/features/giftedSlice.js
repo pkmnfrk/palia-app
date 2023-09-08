@@ -35,6 +35,7 @@ export const giveGift = (id) => async (dispatch, getState) => {
     const giftState = {
         ...getState().gifted[id] ?? {},
         gifted: true,
+        targetted: false,
     };
     dispatch(setGifted(id, giftState));
 

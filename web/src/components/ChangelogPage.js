@@ -6,6 +6,7 @@ export default function ChangelogPage() {
             <h2>Sep 8, 2023 - 1.3.0</h2>
             <ul>
                 <li>[Change] Big changes under the hood! We replaced Server-Sent Events with Websockets, which are more efficient use of resources. This shouldn't affect your usage of the app, but efficiency is always better!</li>
+                <li>[Fix] When automatically setting the gifted state for a villager, remove the target from them. It was always meant to work this way, I promse 😳</li>
             </ul>
             <h2>Sep 4, 2023 - 1.2.1</h2>
             <ul>
