@@ -120,12 +120,54 @@ apiRouter.get("/listen/:playerId", async (req, resp) => {
 
 apiRouter.ws("/socket/:playerId", async (ws, req) => {
     console.log("Socket connection from", req.params.playerId);
-    const undo = addListener(req.params.playerId, (event) => {
-        ws.send(JSON.stringify(event));
-    });
 
-    ws.on("message", (event) => {
+    function sendEvent(type, data) {
+        if(typeof type === "object") {
+            ws.send(JSON.stringify(type));
+        } else {
+            ws.send(JSON.stringify({
+                type,
+                data,
+            }));
+        }
+    }
+
+    const undo = addListener(req.params.playerId, sendEvent);
+
+    ws.on("message", async (event) => {
         // TODO: recieving commands this way
+        const message = JSON.parse(event);
+        console.log(message);
+
+        switch(message.type) {
+            case "setEntity": {
+                const { entity, id, value} = message.data;
+                if(entity === "likes") {
+                    await setLike(id, value);
+                } else {
+                    await setEntity(req.params.playerId, entity, id, value);
+                }
+                break;
+            }
+            case "refresh": {
+                const entities = message.data;
+                for(const entity of (Array.isArray(entities) ? entities : [entities])) {
+                    console.log("Refreshing", entity);
+                    switch(entity) {
+                        case "likes": {
+                            const data = await getLikes();
+                            sendEvent("likes", data)
+                            break;
+                        }
+                        default: {
+                            const data = await getEntity(req.params.playerId, entity);
+                            sendEvent(entity, data);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
     });
 
     ws.on("close", () => {
@@ -133,11 +175,11 @@ apiRouter.ws("/socket/:playerId", async (ws, req) => {
     });
 
     const version = process.env.CDNV ?? "test";
-    const event = {
-        type: "version",
-        data: version,
-    }
-    ws.send(JSON.stringify(event));
+    sendEvent("version", version);
+    sendEvent("likes", await getLikes());
+    sendEvent("gifted", await getEntity(req.params.playerId, "gifted"));
+    sendEvent("completed", await getEntity(req.params.playerId, "completed"));
+    sendEvent("bundle", await getEntity(req.params.playerId, "bundle"));
 })
 
 app.use("/api", apiRouter);

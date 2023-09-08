@@ -14,10 +14,8 @@ export const completedSlice = createSlice({
     }
 });
 
-export const setCompleted = (id, value) => async (dispatch, getState) => {
+export const setCompleted = (id, value) => async (dispatch) => {
     dispatch(setOne({id, value}));
-    const playerId = getState().player.id;
-    await api.setEntity(playerId, api.ENTITY_COMPLETED, id, value);
 };
 
 export const refreshCompleted = () => async (dispatch, getState) => {

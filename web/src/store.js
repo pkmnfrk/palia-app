@@ -6,7 +6,7 @@ import completedReducer from "./features/completedSlice.js";
 import giftedReducer from "./features/giftedSlice.js";
 import playerReducer from "./features/playerSlice.js";
 import bundleReducer from "./features/bundleSlice.js";
-import {watchPlayerId} from "./features/listenerSaga.js";
+import {watchPlayerId, watchDataChanges} from "./features/listenerSaga.js";
 
 const saga = createSagaMiddleware();
 
@@ -25,3 +25,4 @@ export default configureStore({
 });
 
 saga.run(watchPlayerId);
+saga.run(watchDataChanges);

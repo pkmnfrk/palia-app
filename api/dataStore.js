@@ -67,9 +67,7 @@ function checkCacheExpiries() {
         likes_cache = null;
         likes_cache_expiry = nextWeeklyRolloverDate();
 
-        sendEvent(null, "reset", {
-            entity: "likes"
-        });
+        sendEvent(null, "likes", {});
     }
 
     for(const [entity, cache] of Object.entries(player_cache)) {
@@ -77,9 +75,7 @@ function checkCacheExpiries() {
             cache.players = {};
             cache.expiry = expiryFor(entity);
 
-            sendEvent(null, "reset", {
-                entity
-            });
+            sendEvent(null, entity, {});
         }
     }
 }

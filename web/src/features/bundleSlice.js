@@ -14,10 +14,8 @@ export const bundlesSlice = createSlice({
     }
 });
 
-export const setBundle = (id, value) => async (dispatch, getState) => {
+export const setBundle = (id, value) => async (dispatch) => {
     dispatch(setOne({id, value}));
-    const playerId = getState().player.id;
-    await api.setEntity(playerId, "bundle", id, value ? "true" : "false");
 };
 
 export const refreshBundle = () => async (dispatch, getState) => {

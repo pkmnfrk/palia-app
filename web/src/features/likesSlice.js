@@ -16,7 +16,6 @@ export const likesSlice = createSlice({
 
 export const setLike = (id, value) => async (dispatch) => {
     dispatch(setOne({id, value}));
-    await api.setLike(id, value);
 };
 
 export const refreshLikes = () => async (dispatch) => {
