@@ -1,4 +1,4 @@
-import { eventChannel, END } from "redux-saga";
+import { eventChannel, END, buffers } from "redux-saga";
 import { put, call, take, takeEvery, actionChannel, fork, delay, select } from "redux-saga/effects";
 
 import {setPlayerId} from "./playerSlice.js";
@@ -89,7 +89,7 @@ function createListener(playerId) {
                 socketPendingTimer = null;
             }
         }
-    });
+    }, buffers.expanding(100));
 }
 
 function* setUpListener(action) {
@@ -102,7 +102,6 @@ function* setUpListener(action) {
     while(true) {
         const action = yield take(listener);
         yield put(action);
-        break;
     }
 }
 
