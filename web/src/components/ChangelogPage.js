@@ -3,6 +3,10 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>
+            <h2>Sep 8, 2023 - 1.3.1</h2>
+            <ul>
+                <li>[Fix] The websocket functionality was broken due to a few errors in the deploy process. While this broke most functionality, crucially this also broke the auto-update function. However, If you are reading this, you have manually refreshed, so we should be all good.</li>
+            </ul>
             <h2>Sep 8, 2023 - 1.3.0</h2>
             <ul>
                 <li>[Change] Big changes under the hood! We replaced Server-Sent Events with Websockets, which are more efficient use of resources. This shouldn't affect your usage of the app, but efficiency is always better!</li>
