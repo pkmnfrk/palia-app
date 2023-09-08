@@ -18,9 +18,17 @@ function createListener(playerId) {
     return eventChannel((emit) => {
         /** @type {WebSocket} */
         let socketPendingTimer = null;
-        
+        const host = process.env.WEBSOCKET_HOST ? process.env.WEBSOCKET_HOST : window.location.host;
         function openSocket() {
-            socket = new WebSocket(`${process.env.WEBSOCKET_URL}/${playerId}`);
+            try {
+                socket = new WebSocket(`${process.env.WEBSOCKET_PROTOCOL}://${host}/api/socket/${playerId}`);
+            } catch(e) {
+                console.error("Error connecting websocket, refreshing", e);
+                setTimeout(() => {
+                    window.location = window.location;
+                }, 60_000);
+                return;
+            }
 
             socket.addEventListener("message", (event) => {
                 const message = JSON.parse(event.data);

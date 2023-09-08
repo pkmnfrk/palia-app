@@ -1,7 +1,10 @@
 FROM node:20-alpine
 ARG cdnv=test
+ARG wss=wss
 ENV CDNV=$cdnv
 ENV API_ROOT=/api
+ENV WEBSOCKET_PROTOCOL=$wss
+ENV WEBSOCKET_HOST=
 
 WORKDIR /var/app
 COPY web /var/app
