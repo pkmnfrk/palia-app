@@ -1,10 +1,14 @@
 import express, {Router} from "express";
 import morgan from "morgan";
-import {getLikes, setLike, getEntity, setEntity, addListener} from "./dataStore.js";
 import cors from "cors";
 import config from "config";
+import ws from "express-ws";
+
+import {getLikes, setLike, getEntity, setEntity, addListener} from "./dataStore.js";
 
 const app = express();
+ws(app);
+
 if(config.get("request_logging")) {
     app.use(morgan("combined"))
 }
@@ -112,6 +116,28 @@ apiRouter.get("/listen/:playerId", async (req, resp) => {
     }
     
     // console.log("connection closed");
+})
+
+apiRouter.ws("/socket/:playerId", async (ws, req) => {
+    console.log("Socket connection from", req.params.playerId);
+    const undo = addListener(req.params.playerId, (event) => {
+        ws.send(JSON.stringify(event));
+    });
+
+    ws.on("message", (event) => {
+        // TODO: recieving commands this way
+    });
+
+    ws.on("close", () => {
+        undo();
+    });
+
+    const version = process.env.CDNV ?? "test";
+    const event = {
+        type: "version",
+        data: version,
+    }
+    ws.send(JSON.stringify(event));
 })
 
 app.use("/api", apiRouter);
