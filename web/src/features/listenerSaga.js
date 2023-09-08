@@ -13,57 +13,87 @@ let done_first_fetch = false;
 
 function* createListener(playerId) {
     return eventChannel((emit) => {
-        const listener = new EventSource(`${process.env.API_ROOT}/listen/${playerId}`);
+        /** @type {WebSocket} */
+        let socket;
+        let socketPendingTimer = null;
+        
+        function openSocket() {
+            socket = new WebSocket(`${process.env.WEBSOCKET_URL}/${playerId}`);
 
-        listener.addEventListener("likes", (event) => {
-            const data = JSON.parse(event.data);
-            emit(setLiked(data));
-        });
-        listener.addEventListener("completed", (event) => {
-            const data = JSON.parse(event.data);
-            emit(setCompleted(data));
-        })
-        listener.addEventListener("gifted", (event) => {
-            const data = JSON.parse(event.data);
-            emit(setGifted(data));
-        })
-        listener.addEventListener("bundle", (event) => {
-            const data = JSON.parse(event.data);
-            emit(setBundle(data));
-        })
-        listener.addEventListener("reset", (event) => {
-            const data = JSON.parse(event.data);
-            switch(data.entity) {
-                case "likes":
-                    emit(refreshLikes()); break;
-                case "completed":
-                    emit(refreshCompleted()); break;
-                case "gifted":
-                    emit(refreshGifted()); break;
-                case "bundle":
-                    emit(refreshBundle()); break;
-            }
-        })
-        listener.addEventListener("version", (event) => {
-            const expected_version = event.data;
-            const actual_version = process.env.CDNV;
-            if(actual_version !== expected_version) {
-                setTimeout(() => {
-                    window.location = window.location; //refresh
-                }, 120_000); // wait a while for the server to stabilize
-            }
+            socket.addEventListener("message", (event) => {
+                const message = JSON.parse(event.data);
+                switch(message.type) {
+                    case "likes":
+                        emit(setLiked(message.data));
+                        break;
+                    case "completed":
+                        emit(setCompleted(message.data));
+                        break;
+                    case "gifted":
+                        emit(setGifted(message.data));
+                        break;
+                    case "bundle":
+                        emit(setBundle(message.data));
+                        break;
+                    case "reset":
+                        switch(message.data.entity) {
+                            case "likes":
+                                emit(refreshLikes()); break;
+                            case "completed":
+                                emit(refreshCompleted()); break;
+                            case "gifted":
+                                emit(refreshGifted()); break;
+                            case "bundle":
+                                emit(refreshBundle()); break;
+                        }
+                        break;
+                    case "version":
+                        const expected_version = message.data;
+                        const actual_version = process.env.CDNV;
+                        // console.log("Server sxpects version", expected_version, "and I am version", actual_version);
+                        if(actual_version !== expected_version) {
+                            setTimeout(() => {
+                                window.location = window.location; //refresh
+                            }, 120_000); // wait a while for the server to stabilize
+                        }
+    
+                        if(!done_first_fetch || actual_version === expected_version) {
+                            emit(refreshLikes());
+                            emit(refreshCompleted());
+                            emit(refreshGifted());
+                            emit(refreshBundle());
+                            done_first_fetch = true;
+                        }
+                        break;
+                    
+                }
+            });
+    
+            // socket.addEventListener("error", onClose);
+            socket.addEventListener("close", onClose);
+        }
 
-            if(!done_first_fetch || actual_version === expected_version) {
-                emit(refreshLikes());
-                emit(refreshCompleted());
-                emit(refreshGifted());
-                emit(refreshBundle());
-                done_first_fetch = true;
-            }
-        });
+        function onClose(event) {
+            console.log("Closed",event);
+            socket = null;
+    
+            //reconnect after a few seconds
+            socketPendingTimer = setTimeout(() => {
+                openSocket();
+            }, 1000)
+        }
+
+        openSocket();
 
         return () => {
-            listener.close();
+            if(socket) {
+                socket.close();
+                socket = null;
+            }
+            if(socketPendingTimer) {
+                clearTimeout(socketPendingTimer);
+                socketPendingTimer = null;
+            }
         }
     });
 }
