@@ -3,10 +3,10 @@ import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./Villager.module.css";
 import VillagerLike from "./VillagerLike.js";
-import { debounce } from "../utils.js";
-import { setGifted } from "../features/giftedSlice.js";
+import { debounce } from "utils.js";
+import { setGifted } from "features/giftedSlice.js";
 
-import * as portraits from "./villagers/index.js";
+import * as portraits from "data/villagers/index.js";
 import like from "./like.png";
 import love from "./love.png";
 import gift from "./gift.png";

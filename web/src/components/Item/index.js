@@ -1,9 +1,9 @@
 import React from "react";
 
-import * as items from "./items/index.js";
-import { debounce } from "../utils.js";
+import * as items from "data/items/index.js";
+import { debounce } from "utils.js";
 
-import styles from "./Item.module.css";
+import styles from "./index.module.css";
 import check from "./check.png";
 
 

@@ -7,6 +7,9 @@
             ],
             "components": [
                 "./components"
+            ],
+            "data": [
+                "./data"
             ]
         }
     }

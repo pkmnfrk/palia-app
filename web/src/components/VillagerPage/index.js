@@ -1,9 +1,9 @@
 import React from "react";
 
 import Villager from "./Villager.js"
-import villagers from "../villagers.js";
+import villagers from "data/villagers.js";
 
-import styles from "./VillagerPage.module.css";
+import styles from "./index.module.css";
 import { useSelector } from "react-redux";
 
 export default function VillagerPage() {

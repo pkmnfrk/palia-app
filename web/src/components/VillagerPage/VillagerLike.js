@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import { setCompleted } from "../features/completedSlice.js";
-import { setLike } from "../features/likesSlice.js";
-import { giveGift } from "../features/giftedSlice.js";
+import { setCompleted } from "features/completedSlice.js";
+import { setLike } from "features/likesSlice.js";
+import { giveGift } from "features/giftedSlice.js";
 
 import styles from "./Villager.module.css";
 

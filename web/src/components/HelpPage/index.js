@@ -1,15 +1,15 @@
 import React from "react";
 
-import Clock from "./Clock.js";
-import Countdown from "./Countdown.js";
+import Clock from "components/Clock.js";
+import Countdown from "components/Countdown.js";
 
 import help1 from "./help1.png";
-import gift from "./gift.png";
-import target from "./target.png";
-import likes from "./like.png";
-import loves from "./love.png";
+import gift from "components/VillagerPage/gift.png";
+import target from "components/VillagerPage/target.png";
+import likes from "components/VillagerPage/like.png";
+import loves from "components/VillagerPage/love.png";
 
-import styles from "./HelpPage.module.css";
+import styles from "./index.module.css";
 
 export default function HelpPage() {
     return (

@@ -1,8 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { setBundle } from "../../features/bundleSlice.js";
+import { setBundle } from "features/bundleSlice.js";
 
-import Item from "../Item.js";
+import Item from "components/Item/index.js";
 
 import styles from "./BundleItem.module.css";
 
