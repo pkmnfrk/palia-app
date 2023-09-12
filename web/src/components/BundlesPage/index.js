@@ -1,10 +1,10 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import BundleItem from "./BundleItem.js";
-import Button from "./Button.js";
+import Button from "components/Button.js";
 
-import styles from "./BundlesPage.module.css";
-import { setBundleSpoilers } from "../features/playerSlice.js";
+import styles from "./index.module.css";
+import { setBundleSpoilers } from "features/playerSlice.js";
 
 export default function BundlesPage() {
     const dispatch = useDispatch();
@@ -49,6 +49,42 @@ export default function BundlesPage() {
                         <BundleItem id="magic_2" type="water" item="Enchanted Pupfish" description="Kilima Village Fisherman's Lagoon using a Glow Worm" />
                         <BundleItem id="magic_3" type="water" item="Shimmerfin" description="Kilima Village Fisherman's Lagoon using a Worm" />
                         <BundleItem id="magic_4" type="water" item="Long Nosed Unicorn Fish" description="Bahari Bay Coastline using a Glow Worm during the day (6:00am to 6:00pm)"/>
+                    </ul>
+                </div>
+            </div>
+            <h2>Temple of the Flames</h2>
+            <div className={styles.vault}>
+                <div className={styles.bundleWrapper}>
+                    <h3>Sear-Chef Bundle</h3>
+                    <ul className={styles.bundle}>
+                        <BundleItem id="searchef_1" type="fire" item="Chapaa Masala" description="Standard recipe" />
+                        <BundleItem id="searchef_2" type="fire" item="Chopped Heat Root" description="???" />
+                        <BundleItem id="searchef_3" type="fire" item="Stuffed Tomatoes" description="???" />
+                        <BundleItem id="searchef_4" type="fire" item="Dari Cloves" description="Bahari Bay northern half (rare)" />
+                    </ul>
+                </div>
+                <div className={styles.bundleWrapper}>
+                    <h3>Emberseeker's Bundle</h3>
+                    <ul className={styles.bundle}>
+                        <BundleItem id="emberseeker_1" type="fire" item="Emberseeker Medallion" qty="6" description="Bahari Bay Statue Garden (x6)" />
+                    </ul>
+                </div>
+                <div className={styles.bundleWrapper}>
+                    <h3>Brightbug Bundle</h3>
+                    <ul className={styles.bundle}>
+                        <BundleItem id="brightbug_1" type="fire" item="Paper Lantern Bug" description="Bahari Bay south during evening and night (6:00pm to 3:00am)" />
+                        <BundleItem id="brightbug_2" type="fire" item="Bahari Glowbug" description="Bahari Bay south during evening and night (6:00pm to 3:00am)" />
+                        <BundleItem id="brightbug_3" type="fire" item="Spitfire Cicada" description="Bahari Bay trees during morning and day (3:00am to 6:00pm)" />
+                        <BundleItem id="brightbug_4" type="fire" item="Firebreathing Dragonfly" description="Kilima fields"/>
+                    </ul>
+                </div>
+                <div className={styles.bundleWrapper}>
+                    <h3>Flamerod Bundle</h3>
+                    <ul className={styles.bundle}>
+                        <BundleItem id="flamerod_1" type="fire" item="Radiant Sunfish" description="Kilima Rivers using worms" />
+                        <BundleItem id="flamerod_2" type="fire" item="Flametongue Ray" quality description="Kilima Rivers using Glow Worms during morning and day (3:00am to 6:00pm)" />
+                        <BundleItem id="flamerod_3" type="fire" item="Striped Sturgeon" description="Fisherman's Lagoon using Worms in the evening and night (6:00pm to 3:00am)"/>
+                        <BundleItem id="flamerod_4" type="fire" item="Dawnray" description="Bahari Bay Rivers without bait in the morning (3:00am to 12:00pm)" />
                     </ul>
                 </div>
             </div>

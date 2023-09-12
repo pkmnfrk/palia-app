@@ -35,6 +35,23 @@ const items = [
     "Enchanted Pupfish",
     "Shimmerfin",
     "Long Nosed Unicorn Fish",
+
+    "Chapaa Masala",
+    "Chopped Heat Root",
+    "Stuffed Tomatoes",
+    "Dari Cloves",
+
+    "Emberseeker Medallion",
+
+    "Paper Lantern Bug",
+    "Bahari Glowbug",
+    "Spitfire Cicada",
+    "Firebreathing Dragonfly",
+
+    "Radiant Sunfish",
+    "Flametongue Ray",
+    "Striped Sturgeon",
+    "Dawnray",
 ];
 
 content = "";
@@ -42,7 +59,14 @@ for(const item of items) {
     const v = item.toLowerCase().replace(/[^a-z]/g, '_');
     const path = `./web/src/components/items/${v}.png`;
     if(!await fileExists(path)) {
-        await saveWikiImage(item, path)
+        try {
+            await saveWikiImage(item, path)
+        } catch(e) {
+            console.log(e.message);
+            content += `import ${v}_i from "./unknown.png";${EOL}`;
+            content += `export const ${v} = ${v}_i;${EOL}`;
+            continue;
+        }
     }
     content += `import ${v}_i from "./${v}.png";${EOL}`;
     content += `export const ${v} = ${v}_i;${EOL}`;
@@ -79,7 +103,8 @@ async function saveWikiImage(file, diskPath) {
         
         await fs.writeFile(diskPath, imageData);
     } else {
-        console.log("Can't find image reference with", regexp.toString())
+        //console.log("Can't find image reference with", regexp.toString())
+        throw new Error(`Can't find image reference with ${regexp.toString()}`)
     }
 }
 

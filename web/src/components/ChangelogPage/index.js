@@ -2,7 +2,12 @@ import React from "react";
 
 export default function ChangelogPage() {
     return (
-        <>
+        <>  
+            <h2>Sep 12, 2023 - 1.4.0</h2>
+            <ul>
+                <li>[Add] Tau is now a real villager, so he's been added to the list. Who's a good boy? You are!!!</li>
+                <li>[Add] Oh boy, 🔥 new bundles have been added too. So much good stuff</li>
+            </ul>
             <h2>Sep 8, 2023 - 1.3.1</h2>
             <ul>
                 <li>[Fix] The websocket functionality was broken due to a few errors in the deploy process. While this broke most functionality, crucially this also broke the auto-update function. However, If you are reading this, you have manually refreshed, so we should be all good.</li>

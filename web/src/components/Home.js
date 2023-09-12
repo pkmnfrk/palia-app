@@ -2,15 +2,14 @@ import React, { useEffect, useState } from "react";
 import { v4 as uuid } from "uuid";
 import { setPlayerId } from "../features/playerSlice.js";
 import { useSelector, useDispatch } from "react-redux";
-import VillagerPage from "./VillagerPage.js";
-import ChangelogPage from "./ChangelogPage.js";
-import BundlesPage from "./BundlesPage.js";
-import HelpPage from "./HelpPage.js";
+import VillagerPage from "components/VillagerPage.js";
+import ChangelogPage from "components/ChangelogPage/index.js";
+import BundlesPage from "components/BundlesPage/index.js";
+import HelpPage from "components/HelpPage.js";
 
-import Button from "./Button.js";
+import Button from "components/Button.js";
 
 import styles from "./Home.module.css";
-
 
 
 export default function Home() {
