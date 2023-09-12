@@ -40,6 +40,8 @@ import sifuu_i from "./sifuu.png";
 export const sifuu = sifuu_i;
 import tamala_i from "./tamala.png";
 export const tamala = tamala_i;
+import tau_i from "./tau.png";
+export const tau = tau_i;
 import tish_i from "./tish.png";
 export const tish = tish_i;
 import zeki_i from "./zeki.png";

@@ -20,6 +20,7 @@ export default [
     "Reth",
     "Sifuu",
     "Tamala",
+    "Tau",
     "Tish",
     "Zeki",
 ];

@@ -9,7 +9,7 @@ for(const villager of villagers) {
     const v = villager.toLowerCase().replace(/[^a-z]/g, '_');
     const path = `./web/src/components/villagers/${v}.png`;
     if(!await fileExists(path)) {
-        await saveWikiImage(villager + "_Profile.png", path);
+        await saveWikiImage(villager + "_Profile", path);
     }
 
     content += `import ${v}_i from "./${v}.png";${EOL}`;
@@ -53,7 +53,7 @@ await fs.writeFile("./web/src/components/items/index.js", content, "utf-8");
 async function fileExists(file) {
     try {
         await fs.readFile(file);
-        console.log(file, "exists");
+        // console.log(file, "exists");
         return true;
     } catch(e) {
         console.log(file, "not exists");
