@@ -53,6 +53,7 @@ export default function BundlesPage() {
                 </div>
             </div>
             <h2>Temple of the Flames</h2>
+            <p class={styles.note}>Note: this section is a work in progress</p>
             <div className={styles.vault}>
                 <div className={styles.bundleWrapper}>
                     <h3>Sear-Chef Bundle</h3>
