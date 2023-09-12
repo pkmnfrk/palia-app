@@ -11,6 +11,12 @@ import Button from "components/Button.js";
 
 import styles from "./index.module.css";
 
+const validTabs = [
+    "villagers",
+    "bundles",
+    "help",
+    "changelog",
+]
 
 export default function Home() {
     const dispatch = useDispatch();
@@ -21,6 +27,18 @@ export default function Home() {
     useEffect(() => {
         dispatch(setPlayerId(getPlayerId()));
     }, []);
+
+    useEffect(() => {
+        const handler = (e) => {
+            setTab(getTab())
+        };
+
+        window.addEventListener("popstate", handler);
+
+        return () => {
+            window.removeEventListener("popstate", handler);
+        }
+    }, [])
 
     function changeTab(tab) {
         setTab(tab);
@@ -96,20 +114,18 @@ function getPlayerId() {
 }
 
 function getTab() {
-  const cookies = document.cookie.split(';');
+    let ret = null;
+    if(window.location.hash) {
+        ret = window.location.hash.substring(1);
+    }
 
-    for(const cookie of cookies) {
-        const [name, value] = cookie.trim().split('=');
-        if(name === "currentTab") {
-            return value;
-        }
-    } 
+    if(validTabs.indexOf(ret) === -1) {
+        ret = "villagers"
+    }
 
-    return "villagers";
+    return ret;
 }
 
 function saveTab(tab) {
-    const expiry = new Date();
-    expiry.setFullYear(expiry.getFullYear() + 1);
-    document.cookie = `currentTab=${tab}; expires=${expiry.toUTCString()}; path=/`;
+    history.pushState(null, "", "#" + tab);
 }
