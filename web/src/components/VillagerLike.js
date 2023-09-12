@@ -33,7 +33,7 @@ export default function VillagerLike({id, villager}) {
                 }, 500)
                 setState(timer);
             }} />
-            <input type="checkbox" checked={complete} onChange={onCheckboxChange}/>
+            <input id={id + "_complete"} type="checkbox" checked={complete} onChange={onCheckboxChange}/>
         </span>
     )
 }

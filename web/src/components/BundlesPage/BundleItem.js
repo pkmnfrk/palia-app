@@ -12,7 +12,7 @@ export default function BundleItem({id, item, quality, type, description}) {
     const showSpoilers = useSelector(state => state.player.bundle_spoilers);
 
     return (
-        <li className={styles.bundleItem + " " + styles[type]}>
+        <li id={id} className={styles.bundleItem + " " + styles[type]}>
             <Item className={styles.item} name={item} overlay={completed ? "checked" : null} onClick={() => dispatch(setBundle(id, !completed))}/>
             <h4>{quality ? "⭐" : ""}{item}</h4>
             {showSpoilers ? <p>{description}</p> : null}
