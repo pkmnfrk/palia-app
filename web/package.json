@@ -36,6 +36,7 @@
     "webpack-dev-server": "^4.15.1"
   },
   "dependencies": {
+    "@fireworks-js/react": "^2.10.7",
     "@reduxjs/toolkit": "^1.9.5",
     "long-press-event": "^2.4.6",
     "luxon": "^3.4.2",

@@ -1,16 +1,19 @@
 {
     "compilerOptions": {
         "target": "ES6",
-        "paths": {
-            "features": [
-                "./features"
-            ],
-            "components": [
-                "./components"
-            ],
-            "data": [
-                "./data"
-            ]
-        }
-    }
+        // "paths": {
+        //     "features": [
+        //         "./features"
+        //     ],
+        //     "components": [
+        //         "./components"
+        //     ],
+        //     "data": [
+        //         "./data"
+        //     ],
+        // }
+    },
+    "exclude": [
+        "node_modules"
+    ]
 }
