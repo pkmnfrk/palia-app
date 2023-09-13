@@ -2,12 +2,12 @@ import { EOL } from "os";
 import https from "https";
 import fs from "fs/promises";
 
-import villagers from "../web/src/villagers.js";
+import villagers from "../web/src/data/villagers.js";
 
 let content = "";
 for(const villager of villagers) {
     const v = villager.toLowerCase().replace(/[^a-z]/g, '_');
-    const path = `./web/src/components/villagers/${v}.png`;
+    const path = `./web/src/data/villagers/${v}.png`;
     if(!await fileExists(path)) {
         await saveWikiImage(villager + "_Profile", path);
     }
@@ -16,7 +16,7 @@ for(const villager of villagers) {
     content += `export const ${v} = ${v}_i;${EOL}`;
 }
 
-await fs.writeFile("./web/src/components/villagers/index.js", content, "utf-8");
+await fs.writeFile("./web/src/data/villagers/index.js", content, "utf-8");
 
 const items = [
     "Garden Mantis",
@@ -57,7 +57,7 @@ const items = [
 content = "";
 for(const item of items) {
     const v = item.toLowerCase().replace(/[^a-z]/g, '_');
-    const path = `./web/src/components/items/${v}.png`;
+    const path = `./web/src/data/items/${v}.png`;
     if(!await fileExists(path)) {
         try {
             await saveWikiImage(item, path)
@@ -72,7 +72,7 @@ for(const item of items) {
     content += `export const ${v} = ${v}_i;${EOL}`;
 }
 
-await fs.writeFile("./web/src/components/items/index.js", content, "utf-8");
+await fs.writeFile("./web/src/data/items/index.js", content, "utf-8");
 
 async function fileExists(file) {
     try {

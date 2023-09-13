@@ -38,7 +38,7 @@ import stuffed_tomatoes_i from "./unknown.png";
 export const stuffed_tomatoes = stuffed_tomatoes_i;
 import dari_cloves_i from "./dari_cloves.png";
 export const dari_cloves = dari_cloves_i;
-import emberseeker_medallion_i from "./unknown.png";
+import emberseeker_medallion_i from "./emberseeker_medallion.png";
 export const emberseeker_medallion = emberseeker_medallion_i;
 import paper_lantern_bug_i from "./paper_lantern_bug.png";
 export const paper_lantern_bug = paper_lantern_bug_i;
