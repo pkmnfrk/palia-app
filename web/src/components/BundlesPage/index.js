@@ -37,7 +37,9 @@ export default function BundlesPage() {
         if(isCelebrating || !fireworksRef.current) return;
 
         const timer = setTimeout(() => {
-            fireworksRef.current.waitStop();
+            if(fireworksRef.current) {
+                fireworksRef.current.waitStop();
+            }
             setIsCelebrating(null);
         }, 10_000);
 
