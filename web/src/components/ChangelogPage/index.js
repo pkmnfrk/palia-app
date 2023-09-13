@@ -3,6 +3,15 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>  
+            <h2>Sep 13, 2023 - 1.4.1</h2>
+            <ul>
+                <li>[Add] When completing a bundle, visually mark it different</li>
+                <li>[Add] When completing a vault, visually mark it different, and allow for a fun surprise 🎆</li>
+                <li>[Fix] The Emberseeker Medallion was missing the "x 6". Also, add the image from the wiki (still missing a few other images, unfortunately).</li>
+                <li>[Fix] The Flametongue Ray in the Flamerod Bundle was missing incorrectly being marked as needing to be ⭐ quality.</li>
+                <li>[Fix] When I added Tau, the mobile layout broke. Whoops!</li>
+                <li>[Change] Lots of stuff reorganized in the source code to be better. No more dumping everything into a single "components" folder!</li>
+            </ul>
             <h2>Sep 12, 2023 - 1.4.0</h2>
             <ul>
                 <li>[Add] Tau is now a real villager, so he's been added to the list. Who's a good boy? You are!!!</li>
