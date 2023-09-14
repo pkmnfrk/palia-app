@@ -3,6 +3,11 @@ import React from "react";
 export default function ChangelogPage() {
     return (
         <>  
+            <h2>Sep 13, 2023 - 1.5.0</h2>
+            <ul>
+                <li>[Add] A brand new theme, much nicer looking than the one before. At least, in my opinion.</li>
+                <li>[Add] Subtle animations to interactible elements. That's at least a 20% quality bonus right there!</li>
+            </ul>
             <h2>Sep 13, 2023 - 1.4.1</h2>
             <ul>
                 <li>[Add] When completing a bundle, visually mark it different</li>
