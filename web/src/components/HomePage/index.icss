@@ -1,0 +1,42 @@
+footer {
+    text-align: center;
+}
+
+.divider {
+    border-style: solid;
+    border-color: #a07b00;
+    margin: 10px 0;
+}
+
+.page {
+
+    border: 3px solid gray;
+    border-radius: 12px;
+    padding: 10px;
+    margin: 5px;
+}
+
+.pageWrapper {
+    padding: 5px;
+    border-radius: 12px;
+    background: rgb(81, 170, 179);
+    background: linear-gradient(0deg, rgba(69, 117, 136, 1) 30%, rgba(57, 76, 106, 1) 89%);
+}
+
+.tabBar {
+    margin-left: 32px;
+}
+
+@media (max-width: 730px) {
+    .pageWrapper {
+        margin: 0;
+        padding: 0;
+    }
+
+    .page {
+        margin: 2px;
+        margin-top: 0;
+        padding: 2px;
+        /* border: none; */
+    }
+}

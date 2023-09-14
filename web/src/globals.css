@@ -1,6 +1,6 @@
 body {
-  background-color: rgb(228, 216, 180);
-  color: black;
+  background-color: rgb(32, 43, 61);
+  color: white;
   margin: 15px;
   font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
 }
@@ -35,9 +35,9 @@ li {
 }
 
 a {
-  color: #66f;
+  color: rgb(150, 150, 255);
 }
 
 a:visited {
-  color: rgb(121, 4, 156);
+  color: rgb(218, 96, 255);
 }

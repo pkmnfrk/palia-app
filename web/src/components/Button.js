@@ -2,7 +2,7 @@ import React from "react";
 
 import { debounce } from "../utils.js";
 
-import styles from "./Button.module.css";
+import styles from "./Button.icss";
 
 function calcStyles(className, active, disabled) {
     const ret = [
@@ -28,6 +28,9 @@ export default function Button({children, className, active, disabled, onClick})
             className={calcStyles(className, active, disabled)}
             disabled={disabled}
             onClick={onClick ? debounce(onClick) : undefined}
-            >{children}</button>
+            >
+            <div className={styles.buttonInner}>{children}</div>
+        </button>
+        
     )
 }

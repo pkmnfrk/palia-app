@@ -7,9 +7,9 @@ import ChangelogPage from "components/ChangelogPage/index.js";
 import BundlesPage from "components/BundlesPage/index.js";
 import HelpPage from "components/HelpPage/index.js";
 
-import Button from "components/Button.js";
+import Tab from "components/Tab.js";
 
-import styles from "./index.module.css";
+import styles from "./index.icss";
 
 const validTabs = [
     "villagers",
@@ -54,18 +54,23 @@ export default function Home() {
         <>
             <main>
                 <h1>Palia Tracker</h1>
-                <Button active={tab == "villagers"} onClick={() => changeTab("villagers")}>Villagers</Button>
-                <Button active={tab == "bundles"} onClick={() => changeTab("bundles")}>Bundles</Button>
-                <Button active={tab == "help"} onClick={() => changeTab("help")}>Help</Button>
-                <Button active={tab == "changelog"} onClick={() => changeTab("changelog")}>Changelog</Button>
-                <hr className={styles.divider}/>
-                {tab == "villagers" ? <VillagerPage /> : null}
-                {tab == "bundles" ? <BundlesPage /> : null}
-                {tab == "help" ? <HelpPage /> : null}
-                {tab == "changelog" ? <ChangelogPage /> : null}
+                <div className={styles.tabBar}>
+                    <Tab icon="villagers" active={tab == "villagers"} onClick={() => changeTab("villagers")}>Villagers</Tab>
+                    <Tab icon="bundles" active={tab == "bundles"} onClick={() => changeTab("bundles")}>Bundles</Tab>
+                    <Tab icon="help" active={tab == "help"} onClick={() => changeTab("help")}>Help</Tab>
+                    <Tab icon="changelog" active={tab == "changelog"} onClick={() => changeTab("changelog")}>Changelog</Tab>
+                </div>
+                <div className={styles.pageWrapper}>
+                    <div className={styles.page}>   
+                        {tab == "villagers" ? <VillagerPage /> : null}
+                        {tab == "bundles" ? <BundlesPage /> : null}
+                        {tab == "help" ? <HelpPage /> : null}
+                        {tab == "changelog" ? <ChangelogPage /> : null}
+                    </div>
+                </div>
             </main>
             <footer>
-                <a href={`/?playerId=${playerId}`}>Link to your personalized page</a> - This is unique to you!<br />
+                <a href={`?playerId=${playerId}#${tab}`}>Link to your personalized page</a> - This is unique to you!<br />
                 This is a fan project, not associated with Singularity 6. All images &copy; Singularity 6. Website &copy; 2023 Mike Caron<br />
                 Version {process.env.VERSION} ({process.env.CDNV.substring(0, 8)})
             </footer>

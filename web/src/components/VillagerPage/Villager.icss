@@ -14,11 +14,12 @@
     width: calc(100% - 40px);
     text-align: right;
 
-    background-color: rgb(212, 191, 135);
+    background-color: rgb(74, 86, 108);
+    background: linear-gradient(0deg, rgba(89, 103, 127, 1) 30%, rgba(74, 86, 108, 1) 89%);
     padding: 15px;
 
     border-radius: 15px;
-    border: 1px solid rgb(145, 125, 70);
+    border: 2px solid rgb(96, 113, 144);
     vertical-align: middle;
 }
 
@@ -131,7 +132,7 @@
 
     .villager {
         padding: 5px 0;
-        border-radius: 5px;
+        border-radius: 10px;
         grid-template-columns: 60px 30px 1fr 30px 1fr;
         width: calc(100% - 5px);
     }

@@ -5,7 +5,7 @@ import { setCompleted } from "features/completedSlice.js";
 import { setLike } from "features/likesSlice.js";
 import { giveGift } from "features/giftedSlice.js";
 
-import styles from "./Villager.module.css";
+import styles from "./Villager.icss";
 
 export default function VillagerLike({id, villager}) {
     const like = useSelector(state => state.likes[id] ?? "");

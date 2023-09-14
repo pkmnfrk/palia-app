@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { useSelector, useDispatch } from "react-redux";
 
-import styles from "./Villager.module.css";
+import styles from "./Villager.icss";
 import VillagerLike from "./VillagerLike.js";
 import { debounce } from "utils.js";
 import { setGifted } from "features/giftedSlice.js";

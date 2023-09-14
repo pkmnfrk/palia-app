@@ -1,0 +1,40 @@
+.button {
+    display: inline-block;
+    background: rgb(68, 104, 136);
+    color: white;
+    padding: 3px;
+    border-radius: 20px;
+    cursor: pointer;
+    border: none;
+    min-width: 100px;
+}
+
+.buttonInner {
+    display: block;
+    background-color: rgb(58, 73, 103);
+    border: 3px solid rgb(217, 222, 224);
+    /* background: radial-gradient(ellipse, transparent 50%, rgba(92, 162, 191, 1) 89%); */
+    border-radius: 20px;
+    padding: 10px;
+}
+
+.button:hover,
+.button:hover .buttonInner {
+    background-color: rgb(113, 141, 212);
+}
+
+.button:active {
+    background-color: transparent;
+}
+
+.button:active .buttonInner {
+    border-color: rgb(253, 239, 112);
+    background-color: transparent;
+}
+
+
+.button.disabled {
+    /* color: #666; */
+    background-color: rgb(168, 152, 108);
+    cursor: default;
+}

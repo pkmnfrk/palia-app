@@ -4,7 +4,7 @@ import BundleItem from "./BundleItem.js";
 import Button from "components/Button.js";
 import {Fireworks} from "@fireworks-js/react";
 
-import styles from "./index.module.css";
+import styles from "./index.icss";
 import { setBundleSpoilers } from "features/playerSlice.js";
 import bundles from "data/bundles.js";
 

@@ -33,21 +33,29 @@ export default function(_env, argv) {
                 }
             },
             {
-                test: /\.css$/,
+                test: /\.i?css$/,
                 use: [
                     isProduction ? MiniCssExtractPlugin.loader : "style-loader",
-                    "css-loader",
+                    {
+                        loader: "css-loader",
+                        options: {
+                            url: true,
+                            modules: /\.i?css$/
+
+                        }
+                    },
                 ]
             },
             {
                 test: /\.(png|jpg|gif)$/i,
-                use: {
-                    loader: "url-loader",
-                    options: {
-                        limit: 8192,
-                        name: "static/media/[name].[hash:8].[ext]",
-                    }
-                }
+                // use: {
+                //     loader: "url-loader",
+                //     options: {
+                //         limit: 8192,
+                //         name: "static/media/[name].[hash:8].[ext]",
+                //     }
+                // },
+                type: "asset",
             }
         ]
     },

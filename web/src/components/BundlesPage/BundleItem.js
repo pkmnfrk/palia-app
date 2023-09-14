@@ -4,7 +4,7 @@ import { setBundle } from "features/bundleSlice.js";
 
 import Item from "components/Item/index.js";
 
-import styles from "./BundleItem.module.css";
+import styles from "./BundleItem.icss";
 
 export default function BundleItem({id, item, quality, type, description, qty=1}) {
     const dispatch = useDispatch();

@@ -1,0 +1,40 @@
+.tab {
+    display: inline-block;
+    border: none;
+    border-bottom: none;
+    background: rgb(135, 220, 255);
+    background: url(./tab-icons.png), radial-gradient(circle, rgba(135, 220, 255, 1) 30%, rgba(92, 162, 191, 1) 89%);
+    padding: 7px 15px;
+    margin-right: 5px;
+    border-radius: 12px 12px 0 0;
+    cursor: pointer;
+    color: black;
+    height: 64px;
+    width: 64px;
+}
+
+.active {
+    background: url(./tab-icons.png), rgb(48, 64, 90);
+    background-position-x: -64px;
+    color: white;
+}
+
+.icon-villagers {
+    background-position-y: 0;
+}
+
+.icon-bundles {
+    background-position-y: -64px;
+}
+
+.icon-help {
+    background-position-y: -128px;
+}
+
+.icon-changelog {
+    background-position-y: -192px;
+}
+
+.text {
+    display: none;
+}
