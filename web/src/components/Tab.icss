@@ -11,12 +11,19 @@
     color: black;
     height: 64px;
     width: 64px;
+
+    transition: height 250ms;
+}
+
+.tab:hover {
+    height: 70px;
 }
 
 .active {
     background: url(./tab-icons.png), rgb(48, 64, 90);
     background-position-x: -64px;
     color: white;
+    height: 70px;
 }
 
 .icon-villagers {

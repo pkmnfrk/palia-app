@@ -7,6 +7,8 @@
     cursor: pointer;
     border: none;
     min-width: 100px;
+
+    transition: background-color 250ms;
 }
 
 .buttonInner {
@@ -16,6 +18,8 @@
     /* background: radial-gradient(ellipse, transparent 50%, rgba(92, 162, 191, 1) 89%); */
     border-radius: 20px;
     padding: 10px;
+
+    transition: background-color 250ms, border 250ms;
 }
 
 .button:hover,
@@ -25,11 +29,13 @@
 
 .button:active {
     background-color: transparent;
+    transition: none;
 }
 
 .button:active .buttonInner {
     border-color: rgb(253, 239, 112);
     background-color: transparent;
+    transition: none;
 }
 
 
